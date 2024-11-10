@@ -103,18 +103,20 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     /// <returns>cached item</returns>
     public async Task<T?> GetAsync(string key)
     {
+        var specificKey = $"{typeof(T).Name}_{key}";
+
         // 1. Try to get from memory cache
-        if (_isMemoryCacheEnabled && _memoryCache.TryGetValue(key, out T? result))
+        if (_isMemoryCacheEnabled && _memoryCache.TryGetValue(specificKey, out T? result))
             return result;
 
         // 2. Try to get from Redis
         if (_isRedisCacheEnabled)
         {
-            var redisValue = await _redisCache.StringGetAsync(key);
+            var redisValue = await _redisCache.StringGetAsync(specificKey);
             if (redisValue.HasValue)
             {
                 result = Deserialize(redisValue);
-                _memoryCache.Set(key, result, _cacheTime);
+                _memoryCache.Set(specificKey, result, _cacheTime);
                 return result;
             }
         }
@@ -124,19 +126,18 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
         {
             result = await GetFromDb();
 
-            SetToMemory(key, result);
-            await SetToRedis(key, result);
+            SetToMemory(specificKey, result);
+            await SetToRedis(specificKey, result);
 
             return result;
         }
 
         // 4. Get from API and cache the result
         result = await GetFromApi();
-
         if (result != null)
         {
-            SetToMemory(key, result);
-            await SetToRedis(key, result);
+            SetToMemory(specificKey, result);
+            await SetToRedis(specificKey, result);
         }
 
         return result;
@@ -148,14 +149,16 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     /// <param name="key">key</param>
     public async Task ClearCacheAsync(string key)
     {
-        _memoryCache.Remove(key);
-        await _redisCache.KeyDeleteAsync(key);
+        var specificKey = $"{typeof(T).Name}_{key}";
+
+        _memoryCache.Remove(specificKey);
+        await _redisCache.KeyDeleteAsync(specificKey);
     }
 
     #region Private
 
-    private string Serialize(T? item) => JsonSerializer.Serialize(item);
-    private T? Deserialize(RedisValue value) => JsonSerializer.Deserialize<T>(value);
+    private static string Serialize(T? item) => JsonSerializer.Serialize(item);
+    private static T? Deserialize(RedisValue value) => JsonSerializer.Deserialize<T>(value!);
 
     private async Task SetToRedis(string key, T data)
     {
