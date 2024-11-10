@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>CacheManager</Title>
+        <Authors>MHKarami97</Authors>
+        <Description>CacheManager</Description>
+        <Copyright>https://github.com/MHKarami97</Copyright>
+        <PackageProjectUrl>https://github.com/MHKarami97</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/MHKarami97</PackageLicenseUrl>
+        <PackageIcon>icon.jpg</PackageIcon>
+        <RepositoryUrl>https://github.com/MHKarami97</RepositoryUrl>
+        <RepositoryType>public</RepositoryType>
+        <PackageTags>CacheManager</PackageTags>
+        <PackageReleaseNotes>CacheManager</PackageReleaseNotes>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0</FileVersion>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>MHKarami97.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\CacheManager.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\CacheManager.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Update="icon.jpg">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
+    </ItemGroup>
+
+</Project>
