@@ -17,8 +17,9 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     private readonly IMemoryCache _memoryCache;
     private readonly IDatabase _redisCache;
     private readonly DbConfig _dbConfig;
-    private readonly TimeSpan _cacheTime;
     private readonly ApiConfig _apiCall;
+    private readonly MemoryConfig _memory;
+    private readonly RedisConfig _redis;
 
     private readonly bool _isMemoryCacheEnabled;
     private readonly bool _isRedisCacheEnabled;
@@ -29,25 +30,26 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     /// <summary>
     /// Get new Manage Cache Easily
     /// </summary>
-    private EasyCacheManager(ApiConfig api, TimeSpan cacheTime)
+    private EasyCacheManager(ApiConfig api)
     {
         _isRedisCacheEnabled = true;
         _isMemoryCacheEnabled = true;
         _isDbCacheEnabled = true;
 
         _apiCall = api;
-        _cacheTime = cacheTime;
     }
 
     /// <summary>
     /// Get new Manage Cache Easily with memory, redis, db
     /// </summary>
-    public EasyCacheManager(IMemoryCache memoryCache, RedisConfig redis, DbConfig db, ApiConfig api, TimeSpan cacheTime)
-        : this(api, cacheTime)
+    public EasyCacheManager(MemoryConfig memory, RedisConfig redis, DbConfig db, ApiConfig api)
+        : this(api)
     {
-        _memoryCache = memoryCache;
+        _memory = memory;
+        _memoryCache = new MemoryCache(new MemoryCacheOptions());
 
-        var connectionMultiplexer = ConnectionMultiplexer.Connect(redis.ConnectionString);
+        _redis = redis;
+        var connectionMultiplexer = ConnectionMultiplexer.Connect(_redis.ConnectionString);
         _redisCache = connectionMultiplexer.GetDatabase();
 
         _dbConfig = db;
@@ -56,12 +58,13 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     /// <summary>
     /// Get new Manage Cache Easily with redis, db
     /// </summary>
-    public EasyCacheManager(RedisConfig redis, DbConfig db, ApiConfig api, TimeSpan cacheTime)
-        : this(api, cacheTime)
+    public EasyCacheManager(RedisConfig redis, DbConfig db, ApiConfig api)
+        : this(api)
     {
         _isMemoryCacheEnabled = false;
 
-        var connectionMultiplexer = ConnectionMultiplexer.Connect(redis.ConnectionString);
+        _redis = redis;
+        var connectionMultiplexer = ConnectionMultiplexer.Connect(_redis.ConnectionString);
         _redisCache = connectionMultiplexer.GetDatabase();
 
         _dbConfig = db;
@@ -70,12 +73,13 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     /// <summary>
     /// Get new Manage Cache Easily with memory, db
     /// </summary>
-    public EasyCacheManager(IMemoryCache memoryCache, DbConfig db, ApiConfig api, TimeSpan cacheTime)
-        : this(api, cacheTime)
+    public EasyCacheManager(MemoryConfig memory, DbConfig db, ApiConfig api)
+        : this(api)
     {
         _isRedisCacheEnabled = false;
 
-        _memoryCache = memoryCache;
+        _memory = memory;
+        _memoryCache = new MemoryCache(new MemoryCacheOptions());
 
         _dbConfig = db;
     }
@@ -83,14 +87,16 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     /// <summary>
     /// Get new Manage Cache Easily with memory, redis
     /// </summary>
-    public EasyCacheManager(IMemoryCache memoryCache, RedisConfig redis, ApiConfig api, TimeSpan cacheTime)
-        : this(api, cacheTime)
+    public EasyCacheManager(MemoryConfig memory, RedisConfig redis, ApiConfig api)
+        : this(api)
     {
         _isDbCacheEnabled = false;
 
-        _memoryCache = memoryCache;
+        _memory = memory;
+        _memoryCache = new MemoryCache(new MemoryCacheOptions());
 
-        var connectionMultiplexer = ConnectionMultiplexer.Connect(redis.ConnectionString);
+        _redis = redis;
+        var connectionMultiplexer = ConnectionMultiplexer.Connect(_redis.ConnectionString);
         _redisCache = connectionMultiplexer.GetDatabase();
     }
 
@@ -116,8 +122,11 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
             if (redisValue.HasValue)
             {
                 result = Deserialize(redisValue);
-                _memoryCache.Set(specificKey, result, _cacheTime);
-                return result;
+                if (result != null)
+                {
+                    SetToMemory(specificKey, result);
+                    return result;
+                }
             }
         }
 
@@ -164,7 +173,7 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     {
         if (_isRedisCacheEnabled)
         {
-            await _redisCache.StringSetAsync(key, Serialize(data), _cacheTime);
+            await _redisCache.StringSetAsync(key, Serialize(data), _redis.CacheTime);
         }
     }
 
@@ -172,7 +181,7 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     {
         if (_isMemoryCacheEnabled)
         {
-            _memoryCache.Set(key, data, _cacheTime);
+            _memoryCache.Set(key, data, _memory.CacheTime);
         }
     }
 

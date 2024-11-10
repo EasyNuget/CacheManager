@@ -1,15 +1,10 @@
 ﻿namespace CacheManager.Config;
 
 /// <summary>
-/// Config of Redis cache
+/// Config of Memory cache
 /// </summary>
-public abstract class RedisConfig
+public abstract class MemoryConfig
 {
-    /// <summary>
-    /// Connection String for db connect
-    /// </summary>
-    public required string ConnectionString { get; init; }
-    
     /// <summary>
     /// Cache Time
     /// </summary>
