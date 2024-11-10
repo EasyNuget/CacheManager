@@ -32,10 +32,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Update="icon.jpg">
-        <Pack>True</Pack>
-        <PackagePath></PackagePath>
-      </None>
+      <None Remove="README.md" />
+      <None Remove="MHKarami97.snk" />
+      <None Remove="icon.jpg" />
+      <None Remove=".gitignore" />
     </ItemGroup>
 
     <ItemGroup>
