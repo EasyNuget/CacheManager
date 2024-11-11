@@ -6,9 +6,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{FD
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		.gitignore = .gitignore
-		icon.jpg = icon.jpg
 		MHKarami97.snk = MHKarami97.snk
 		README.md = README.md
+		LICENSE.txt = LICENSE.txt
+		icon.ico = icon.ico
+		icon.jpg = icon.jpg
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManagerUnitTest", "CacheManagerUnitTest\CacheManagerUnitTest.csproj", "{11A397C0-ECD3-4734-B5F5-E80037190D6D}"
