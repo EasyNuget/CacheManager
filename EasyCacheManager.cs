@@ -146,7 +146,11 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
         _asyncLock.Dispose();
         GC.SuppressFinalize(this);
 
+#if NETSTANDARD2_0 || NET462
+        return default;
+#else
         return ValueTask.CompletedTask;
+#endif
     }
 
     private async Task<T?> GetValueAsync(string specificKey)

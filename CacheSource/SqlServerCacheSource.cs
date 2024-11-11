@@ -30,7 +30,11 @@ public class SqlServerCacheSource<T> : IBaseCacheSource<T>
     /// <returns>Result</returns>
     public async Task<T?> GetAsync(string key)
     {
-        await using var connection = new SqlConnection(_config.ConnectionString);
+#if NETSTANDARD2_0 || NET462
+        using var connection = new SqlConnection(_config.ConnectionString);
+#else
+                 await using var connection = new SqlConnection(_config.ConnectionString);
+#endif
         return await connection.QuerySingleOrDefaultAsync<T>(
             _config.Query,
             new { Key = key },

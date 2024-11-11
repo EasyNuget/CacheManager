@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net8.0;netstandard2.0;net462</TargetFrameworks>
+        <LangVersion>12.0</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -15,8 +16,8 @@
         <RepositoryType>public</RepositoryType>
         <PackageTags>CacheManager</PackageTags>
         <PackageReleaseNotes>CacheManager</PackageReleaseNotes>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
-        <FileVersion>1.0.0</FileVersion>
+        <AssemblyVersion>1.0.1</AssemblyVersion>
+        <FileVersion>1.0.1</FileVersion>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>MHKarami97.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
@@ -24,6 +25,8 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <ApplicationIcon>icon.ico</ApplicationIcon>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <IncludeContentInPack>true</IncludeContentInPack>
+        <Version>1.0.1</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -37,17 +40,20 @@
     <ItemGroup>
         <None Remove="MHKarami97.snk" />
         <None Remove=".gitignore" />
-        <None Update="icon.jpg">
-            <Pack>True</Pack>
+        <None Include="icon.jpg">
+            <Pack>true</Pack>
             <PackagePath></PackagePath>
+            <Visible>True</Visible>
         </None>
-        <None Update="LICENSE.txt">
-          <Pack>True</Pack>
-          <PackagePath>\</PackagePath>
+        <None Include="LICENSE.txt">
+            <Pack>true</Pack>
+            <PackagePath></PackagePath>
+            <Visible>True</Visible>
         </None>
-        <None Update="README.md">
-          <Pack>True</Pack>
-          <PackagePath>\</PackagePath>
+        <None Include="README.md">
+            <Pack>true</Pack>
+            <PackagePath></PackagePath>
+            <Visible>True</Visible>
         </None>
         <None Remove="CacheManagerUnitTest\**" />
     </ItemGroup>
