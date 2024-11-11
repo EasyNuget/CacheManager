@@ -8,11 +8,11 @@
         <Title>CacheManager</Title>
         <Authors>MHKarami97</Authors>
         <Description>CacheManager</Description>
-        <Copyright>https://github.com/MHKarami97</Copyright>
-        <PackageProjectUrl>https://github.com/MHKarami97</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/MHKarami97</PackageLicenseUrl>
+        <Copyright>https://github.com/MHKarami97/CacheManager</Copyright>
+        <PackageProjectUrl>https://github.com/MHKarami97/CacheManager</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/MHKarami97/CacheManager</PackageLicenseUrl>
         <PackageIcon>icon.jpg</PackageIcon>
-        <RepositoryUrl>https://github.com/MHKarami97</RepositoryUrl>
+        <RepositoryUrl>https://github.com/MHKarami97/CacheManager</RepositoryUrl>
         <RepositoryType>public</RepositoryType>
         <PackageTags>CacheManager</PackageTags>
         <PackageReleaseNotes>CacheManager</PackageReleaseNotes>
