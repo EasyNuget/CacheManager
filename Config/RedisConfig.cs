@@ -3,7 +3,7 @@
 /// <summary>
 /// Config of Redis cache
 /// </summary>
-public abstract class RedisConfig
+public class RedisConfig
 {
     /// <summary>
     /// Connection String for db connect
@@ -13,5 +13,5 @@ public abstract class RedisConfig
     /// <summary>
     /// Cache Time
     /// </summary>
-    public required TimeSpan CacheTime { get; init; } = TimeSpan.FromSeconds(5);
+    public TimeSpan CacheTime { get; init; } = TimeSpan.FromSeconds(5);
 }

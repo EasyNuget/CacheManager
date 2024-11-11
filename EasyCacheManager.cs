@@ -1,11 +1,8 @@
-﻿using System.Data;
-using System.Text.Json;
+﻿using System.Collections.Concurrent;
+using System.ComponentModel.DataAnnotations;
+using AsyncKeyedLock;
+using CacheManager.CacheSource;
 using CacheManager.Config;
-using Dapper;
-using Flurl.Http;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Caching.Memory;
-using StackExchange.Redis;
 
 namespace CacheManager;
 
@@ -14,96 +11,58 @@ namespace CacheManager;
 /// </summary>
 public class EasyCacheManager<T> : IEasyCacheManager<T>
 {
-    private readonly IMemoryCache _memoryCache;
-    private readonly IDatabase _redisCache;
-    private readonly DbConfig _dbConfig;
-    private readonly ApiConfig _apiCall;
-    private readonly MemoryConfig _memory;
-    private readonly RedisConfig _redis;
+    private readonly LockConfig _lockConfig;
+    private readonly IEnumerable<IBaseCacheSource<T>> _cacheSources;
+    private readonly IEnumerable<ICacheSourceWithSet<T>> _cacheSourcesWithSet;
+    private readonly IEnumerable<ICacheSourceWithClear<T>> _cacheSourcesWithClear;
 
-    private readonly bool _isMemoryCacheEnabled;
-    private readonly bool _isRedisCacheEnabled;
-    private readonly bool _isDbCacheEnabled;
+    private readonly AsyncKeyedLocker<string> _asyncLock;
+    private readonly ConcurrentDictionary<string, Task<T?>> _ongoingOperations;
 
-    #region Constructor
 
     /// <summary>
-    /// Get new Manage Cache Easily
+    /// Create Manage Cache Easily
     /// </summary>
-    private EasyCacheManager(ApiConfig api)
+    /// <param name="cacheSources"></param>
+    /// <param name="lockConfig">lock option</param>
+    /// <exception cref="ArgumentException">CacheSources is null</exception>
+    /// <exception cref="ArgumentException">Options is null</exception>
+    /// <exception cref="ArgumentException">Duplicate priority values found</exception>
+    public EasyCacheManager([Required] IEnumerable<IBaseCacheSource<T>> cacheSources, LockConfig lockConfig)
     {
-        _isRedisCacheEnabled = true;
-        _isMemoryCacheEnabled = true;
-        _isDbCacheEnabled = true;
+        if (cacheSources is null)
+            throw new ArgumentException("CacheSources is null", nameof(cacheSources));
 
-        _apiCall = api;
+        _lockConfig = lockConfig ?? throw new ArgumentException("Options is null", nameof(lockConfig));
+
+        var baseCacheSources = cacheSources.ToList();
+
+        // Check for duplicate priorities
+        var duplicatePriorities = baseCacheSources
+            .GroupBy(source => source.Priority)
+            .Where(g => g.Count() > 1)
+            .Select(g => g.Key)
+            .ToList();
+
+        if (duplicatePriorities.Count != 0)
+            throw new ArgumentException($"Duplicate priority values found: {string.Join(", ", duplicatePriorities)}", nameof(cacheSources));
+
+        _cacheSources = baseCacheSources.OrderBy(x => x.Priority);
+        _cacheSourcesWithSet = baseCacheSources.OfType<ICacheSourceWithSet<T>>().OrderBy(x => x.Priority);
+        _cacheSourcesWithClear = baseCacheSources.OfType<ICacheSourceWithClear<T>>().OrderBy(x => x.Priority);
+
+        _asyncLock = new AsyncKeyedLocker<string>(new AsyncKeyedLockOptions
+        {
+            PoolSize = Environment.ProcessorCount * lockConfig.PoolSize,
+            PoolInitialFill = lockConfig.PoolInitialFill,
+            MaxCount = lockConfig.MaxCount
+        });
+
+        _ongoingOperations = new ConcurrentDictionary<string, Task<T?>>();
     }
 
     /// <summary>
-    /// Get new Manage Cache Easily with memory, redis, db
-    /// </summary>
-    public EasyCacheManager(MemoryConfig memory, RedisConfig redis, DbConfig db, ApiConfig api)
-        : this(api)
-    {
-        _memory = memory;
-        _memoryCache = new MemoryCache(new MemoryCacheOptions());
-
-        _redis = redis;
-        var connectionMultiplexer = ConnectionMultiplexer.Connect(_redis.ConnectionString);
-        _redisCache = connectionMultiplexer.GetDatabase();
-
-        _dbConfig = db;
-    }
-
-    /// <summary>
-    /// Get new Manage Cache Easily with redis, db
-    /// </summary>
-    public EasyCacheManager(RedisConfig redis, DbConfig db, ApiConfig api)
-        : this(api)
-    {
-        _isMemoryCacheEnabled = false;
-
-        _redis = redis;
-        var connectionMultiplexer = ConnectionMultiplexer.Connect(_redis.ConnectionString);
-        _redisCache = connectionMultiplexer.GetDatabase();
-
-        _dbConfig = db;
-    }
-
-    /// <summary>
-    /// Get new Manage Cache Easily with memory, db
-    /// </summary>
-    public EasyCacheManager(MemoryConfig memory, DbConfig db, ApiConfig api)
-        : this(api)
-    {
-        _isRedisCacheEnabled = false;
-
-        _memory = memory;
-        _memoryCache = new MemoryCache(new MemoryCacheOptions());
-
-        _dbConfig = db;
-    }
-
-    /// <summary>
-    /// Get new Manage Cache Easily with memory, redis
-    /// </summary>
-    public EasyCacheManager(MemoryConfig memory, RedisConfig redis, ApiConfig api)
-        : this(api)
-    {
-        _isDbCacheEnabled = false;
-
-        _memory = memory;
-        _memoryCache = new MemoryCache(new MemoryCacheOptions());
-
-        _redis = redis;
-        var connectionMultiplexer = ConnectionMultiplexer.Connect(_redis.ConnectionString);
-        _redisCache = connectionMultiplexer.GetDatabase();
-    }
-
-    #endregion
-
-    /// <summary>
-    /// Get Cached item from: memory, redis, db. if not exist call api and returned it, also cached it
+    /// Get Cached item from all. if not exist call api and returned it, also cached it
     /// </summary>
     /// <param name="key">Key</param>
     /// <returns>cached item</returns>
@@ -111,120 +70,104 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     {
         var specificKey = $"{typeof(T).Name}_{key}";
 
-        // 1. Try to get from memory cache
-        if (_isMemoryCacheEnabled && _memoryCache.TryGetValue(specificKey, out T? result))
-            return result;
-
-        // 2. Try to get from Redis
-        if (_isRedisCacheEnabled)
+        if (_ongoingOperations.TryGetValue(specificKey, out var ongoingTask))
         {
-            var redisValue = await _redisCache.StringGetAsync(specificKey);
-            if (redisValue.HasValue)
+            return await ongoingTask;
+        }
+
+        using (await _asyncLock.LockOrNullAsync(specificKey, _lockConfig.TimeOut))
+        {
+            try
             {
-                result = Deserialize(redisValue);
-                if (result != null)
+                // Double-check if another thread has completed the operation
+                if (_ongoingOperations.TryGetValue(specificKey, out ongoingTask))
                 {
-                    SetToMemory(specificKey, result);
-                    return result;
+                    return await ongoingTask;
                 }
+
+                var task = GetValueAsync(specificKey);
+                _ongoingOperations.TryAdd(specificKey, task);
+
+                return await task;
+            }
+            finally
+            {
+                _ongoingOperations.TryRemove(specificKey, out _);
             }
         }
-
-        // 3. Try to get from Database
-        if (_isDbCacheEnabled)
-        {
-            result = await GetFromDb();
-
-            SetToMemory(specificKey, result);
-            await SetToRedis(specificKey, result);
-
-            return result;
-        }
-
-        // 4. Get from API and cache the result
-        result = await GetFromApi();
-        if (result != null)
-        {
-            SetToMemory(specificKey, result);
-            await SetToRedis(specificKey, result);
-        }
-
-        return result;
     }
 
     /// <summary>
-    /// Clear cached item from memory and redis with key
+    /// Manual set value to cache
     /// </summary>
-    /// <param name="key">key</param>
+    /// <param name="key">Key</param>
+    /// <param name="value">Value</param>
+    /// <returns>cached item</returns>
+    public async Task SetAsync(string key, T value)
+    {
+        var specificKey = $"{typeof(T).Name}_{key}";
+
+        using (await _asyncLock.LockAsync(specificKey))
+        {
+            // Clear all sources in parallel
+            var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(specificKey));
+
+            await Task.WhenAll(clearTasks);
+
+            // Set all sources in parallel
+            var setTasks = _cacheSourcesWithSet.Select(source => source.SetAsync(specificKey, value));
+
+            await Task.WhenAll(setTasks);
+        }
+    }
+
+    /// <summary>
+    /// Clear cached item from all
+    /// </summary>
+    /// <param name="key">Key</param>
     public async Task ClearCacheAsync(string key)
     {
         var specificKey = $"{typeof(T).Name}_{key}";
 
-        _memoryCache.Remove(specificKey);
-        await _redisCache.KeyDeleteAsync(specificKey);
-    }
-
-    #region Private
-
-    private static string Serialize(T? item) => JsonSerializer.Serialize(item);
-    private static T? Deserialize(RedisValue value) => JsonSerializer.Deserialize<T>(value!);
-
-    private async Task SetToRedis(string key, T data)
-    {
-        if (_isRedisCacheEnabled)
+        using (await _asyncLock.LockAsync(specificKey))
         {
-            await _redisCache.StringSetAsync(key, Serialize(data), _redis.CacheTime);
+            // Clear all sources in parallel
+            var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(specificKey));
+
+            await Task.WhenAll(clearTasks);
         }
     }
 
-    private void SetToMemory(string key, T data)
+    /// <summary>
+    /// Dispose of AsyncKeyedLock resources asynchronously
+    /// </summary>
+    public ValueTask DisposeAsync()
     {
-        if (_isMemoryCacheEnabled)
-        {
-            _memoryCache.Set(key, data, _memory.CacheTime);
-        }
+        _asyncLock.Dispose();
+        GC.SuppressFinalize(this);
+
+        return ValueTask.CompletedTask;
     }
 
-    private async Task<T> GetFromDb()
+    private async Task<T?> GetValueAsync(string specificKey)
     {
-        await using var connection = new SqlConnection(_dbConfig.ConnectionString);
+        T? result = default;
 
-        var result = await connection.QuerySingleAsync<T>(
-            _dbConfig.Query,
-            commandType: CommandType.Text,
-            commandTimeout: _dbConfig.TimeOutOnSecond);
+        foreach (var source in _cacheSources)
+        {
+            result = await source.GetAsync(specificKey);
+
+            if (result != null)
+            {
+                foreach (var higherPrioritySource in _cacheSourcesWithSet.Where(x => x.Priority < source.Priority))
+                {
+                    await higherPrioritySource.SetAsync(specificKey, result);
+                }
+
+                break;
+            }
+        }
 
         return result;
     }
-
-    private async Task<T> GetFromApi()
-    {
-        T result;
-
-        switch (_apiCall.Type)
-        {
-            case ApiType.GET:
-                result = await _apiCall.Url
-                    .WithHeaders(_apiCall.Header)
-                    .WithTimeout(_apiCall.TimeOut)
-                    .GetJsonAsync<T>();
-                break;
-
-            case ApiType.POST:
-                result = await _apiCall.Url
-                    .WithHeaders(_apiCall.Header)
-                    .WithTimeout(_apiCall.TimeOut)
-                    .PostJsonAsync(null)
-                    .ReceiveJson<T>();
-                break;
-
-            default:
-                throw new ArgumentException("Not Valid type for api call");
-        }
-
-
-        return result;
-    }
-
-    #endregion
 }

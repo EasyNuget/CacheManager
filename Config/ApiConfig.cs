@@ -3,7 +3,7 @@
 /// <summary>
 /// Config of Redis cache
 /// </summary>
-public abstract class ApiConfig
+public class ApiConfig
 {
     /// <summary>
     /// Url to get Data
@@ -13,15 +13,15 @@ public abstract class ApiConfig
     /// <summary>
     /// Head
     /// </summary>
-    public required Dictionary<string, string>? Header { get; init; } = null;
+    public Dictionary<string, string>? Header { get; init; } = null;
 
     /// <summary>
     /// Type
     /// </summary>
-    public required ApiType Type { get; init; } = ApiType.GET;
+    public ApiType Type { get; init; } = ApiType.Get;
 
     /// <summary>
     /// TimeOut
     /// </summary>
-    public required TimeSpan TimeOut { get; init; } = TimeSpan.FromSeconds(5);
+    public TimeSpan TimeOut { get; init; } = TimeSpan.FromSeconds(5);
 }

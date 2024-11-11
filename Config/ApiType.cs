@@ -8,10 +8,10 @@ public enum ApiType
     /// <summary>
     /// GET
     /// </summary>
-    GET = 1,
+    Get = 1,
     
     /// <summary>
     /// POST
     /// </summary>
-    POST = 2
+    Post = 2
 }

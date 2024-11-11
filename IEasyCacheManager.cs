@@ -3,17 +3,25 @@
 /// <summary>
 /// Manage Cache Easily
 /// </summary>
-public interface IEasyCacheManager<T>
+public interface IEasyCacheManager<T> : IAsyncDisposable
 {
     /// <summary>
-    /// Get Cached item from: memory, redis, db. if not exist call api and returned it, also cached it
+    /// Get Cached item from all. if not exist call api and returned it, also cached it
     /// </summary>
     /// <param name="key">Key</param>
     /// <returns>cached item</returns>
     Task<T?> GetAsync(string key);
 
     /// <summary>
-    /// Clear cached item from memory and redis with key
+    /// Manual set value to cache
+    /// </summary>
+    /// <param name="key">Key</param>
+    /// <param name="value">Value</param>
+    /// <returns>cached item</returns>
+    Task SetAsync(string key, T value);
+
+    /// <summary>
+    /// Clear cached item from all
     /// </summary>
     /// <param name="key">Key</param>
     Task ClearCacheAsync(string key);

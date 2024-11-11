@@ -3,7 +3,7 @@
 /// <summary>
 /// Config of Database cache
 /// </summary>
-public abstract class DbConfig
+public class DbConfig
 {
     /// <summary>
     /// Connection String for db connect
@@ -18,5 +18,5 @@ public abstract class DbConfig
     /// <summary>
     /// TimeOut
     /// </summary>
-    public required int TimeOutOnSecond { get; init; } = 5;
+    public int TimeOutOnSecond { get; init; } = 5;
 }
