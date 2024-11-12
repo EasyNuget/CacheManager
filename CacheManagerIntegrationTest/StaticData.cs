@@ -6,7 +6,7 @@ internal static class StaticData
     internal const string SqlImage = "mcr.microsoft.com/mssql/server:2022-latest";
     internal const string RedisImage = "redis:latest";
     internal const string DockerEndPoint = "npipe://./pipe/docker_engine";
-    internal const string DbPassword = "MyCustomP@ssword";
+    internal const string DbPassword = "YourStrong!Passw0rd";
     internal const int SqlPort = 1433;
     internal const int RedisPort = 6379;
     internal const string Key = "test_key";

@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{FD
 		LICENSE.txt = LICENSE.txt
 		icon.ico = icon.ico
 		icon.jpg = icon.jpg
+		.github\workflows\integration-tests.yml = .github\workflows\integration-tests.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManagerUnitTest", "CacheManagerUnitTest\CacheManagerUnitTest.csproj", "{11A397C0-ECD3-4734-B5F5-E80037190D6D}"

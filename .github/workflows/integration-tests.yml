@@ -1,0 +1,49 @@
+name: Integration Tests
+
+on: [ push, pull_request ]
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    services:
+      # Define the SQL Server 2022 service
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        ports:
+          - 1433:1433
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: YourStrong!Passw0rd
+        options: >-
+          --health-cmd "exit 0" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+
+      # Define the Redis service
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x.x'
+
+      - name: Install Dependencies
+        run: dotnet restore
+
+      - name: Build the Project
+        run: dotnet build --no-restore
+
+      - name: Run Integration Tests
+        env:
+          # Provide the connection strings for the containers
+          SQL_CONNECTION_STRING: "Server=localhost,1433;Database=master;User Id=sa;Password=YourStrong!Passw0rd;"
+          REDIS_CONNECTION_STRING: "localhost:6379"
+        run: dotnet test --no-build --logger "trx;LogFileName=integration_test_results.xml"
