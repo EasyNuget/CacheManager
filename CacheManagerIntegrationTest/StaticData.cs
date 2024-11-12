@@ -3,7 +3,7 @@
 internal static class StaticData
 {
     internal const string Api = "http://mock-api.com/data";
-    internal const string SqlImage = "repo.asax.ir/mssql/server:2019-latest";
+    internal const string SqlImage = "mcr.microsoft.com/mssql/server:2022-latest";
     internal const string RedisImage = "redis:latest";
     internal const string DockerEndPoint = "npipe://./pipe/docker_engine";
     internal const string DbPassword = "MyCustomP@ssword";
