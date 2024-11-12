@@ -9,7 +9,7 @@ namespace CacheManager.CacheSource;
 /// Get from Db
 /// </summary>
 /// <typeparam name="T">Result</typeparam>
-public class SqlServerCacheSource<T> : IBaseCacheSource<T>
+public class DbCacheSource<T> : IBaseCacheSource<T>
 {
     private readonly DbConfig _config;
 
@@ -18,7 +18,7 @@ public class SqlServerCacheSource<T> : IBaseCacheSource<T>
     /// </summary>
     /// <param name="config">Api Config</param>
     /// <exception cref="ArgumentException">Config is null</exception>
-    public SqlServerCacheSource(DbConfig config)
+    public DbCacheSource(DbConfig config)
     {
         _config = config ?? throw new ArgumentException("Config is null", nameof(config));
     }
@@ -33,13 +33,15 @@ public class SqlServerCacheSource<T> : IBaseCacheSource<T>
 #if NETSTANDARD2_0 || NET462
         using var connection = new SqlConnection(_config.ConnectionString);
 #else
-                 await using var connection = new SqlConnection(_config.ConnectionString);
+        await using var connection = new SqlConnection(_config.ConnectionString);
 #endif
-        return await connection.QuerySingleOrDefaultAsync<T>(
+        var result = await connection.QuerySingleOrDefaultAsync<T>(
             _config.Query,
             new { Key = key },
             commandType: CommandType.Text,
             commandTimeout: _config.TimeOutOnSecond);
+
+        return result;
     }
 
     /// <summary>

@@ -102,6 +102,26 @@ public class EasyCacheManagerTests
     }
 
     [Fact]
+    public void EasyBuilder_ShouldThrowException_WhenLockConfigIsNull()
+    {
+        // Arrange
+        var easyCacheManager = new CacheBuilder<string>()
+            .AddRedis(new RedisConfig
+            {
+                ConnectionString = ""
+            })
+            .AddDb(new DbConfig
+            {
+                ConnectionString = "",
+                Query = ""
+            })
+            .AddMemory(new MemoryConfig());
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => easyCacheManager.Build(null));
+    }
+
+    [Fact]
     public void Constructor_ShouldThrowException_WhenDuplicatePrioritiesExist()
     {
         // Arrange

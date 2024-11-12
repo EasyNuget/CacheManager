@@ -28,21 +28,23 @@ public class ApiCacheSource<T> : IBaseCacheSource<T>
     /// <returns>Result</returns>
     public async Task<T?> GetAsync(string key)
     {
-        return _config.Type switch
+        var result = _config.Type switch
         {
             ApiType.Get => await _config.Url
                 .WithHeaders(_config.Header)
                 .WithTimeout(_config.TimeOut)
-                .GetJsonAsync<T>(),
+                .GetJsonAsync<T?>(),
 
             ApiType.Post => await _config.Url
                 .WithHeaders(_config.Header)
                 .WithTimeout(_config.TimeOut)
                 .PostJsonAsync(null)
-                .ReceiveJson<T>(),
+                .ReceiveJson<T?>(),
 
             _ => throw new ArgumentException("Not Valid type for api call")
         };
+
+        return result;
     }
 
     /// <summary>

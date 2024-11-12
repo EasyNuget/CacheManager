@@ -19,7 +19,6 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     private readonly AsyncKeyedLocker<string> _asyncLock;
     private readonly ConcurrentDictionary<string, Task<T?>> _ongoingOperations;
 
-
     /// <summary>
     /// Create Manage Cache Easily
     /// </summary>
@@ -68,31 +67,29 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     /// <returns>cached item</returns>
     public async Task<T?> GetAsync(string key)
     {
-        var specificKey = $"{typeof(T).Name}_{key}";
-
-        if (_ongoingOperations.TryGetValue(specificKey, out var ongoingTask))
+        if (_ongoingOperations.TryGetValue(key, out var ongoingTask))
         {
             return await ongoingTask;
         }
 
-        using (await _asyncLock.LockOrNullAsync(specificKey, _lockConfig.TimeOut))
+        using (await _asyncLock.LockOrNullAsync(key, _lockConfig.TimeOut))
         {
             try
             {
                 // Double-check if another thread has completed the operation
-                if (_ongoingOperations.TryGetValue(specificKey, out ongoingTask))
+                if (_ongoingOperations.TryGetValue(key, out ongoingTask))
                 {
                     return await ongoingTask;
                 }
 
-                var task = GetValueAsync(specificKey);
-                _ongoingOperations.TryAdd(specificKey, task);
+                var task = GetValueAsync(key);
+                _ongoingOperations.TryAdd(key, task);
 
                 return await task;
             }
             finally
             {
-                _ongoingOperations.TryRemove(specificKey, out _);
+                _ongoingOperations.TryRemove(key, out _);
             }
         }
     }
@@ -105,17 +102,15 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     /// <returns>cached item</returns>
     public async Task SetAsync(string key, T value)
     {
-        var specificKey = $"{typeof(T).Name}_{key}";
-
-        using (await _asyncLock.LockAsync(specificKey))
+        using (await _asyncLock.LockAsync(key))
         {
             // Clear all sources in parallel
-            var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(specificKey));
+            var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(key));
 
             await Task.WhenAll(clearTasks);
 
             // Set all sources in parallel
-            var setTasks = _cacheSourcesWithSet.Select(source => source.SetAsync(specificKey, value));
+            var setTasks = _cacheSourcesWithSet.Select(source => source.SetAsync(key, value));
 
             await Task.WhenAll(setTasks);
         }
@@ -127,12 +122,10 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     /// <param name="key">Key</param>
     public async Task ClearCacheAsync(string key)
     {
-        var specificKey = $"{typeof(T).Name}_{key}";
-
-        using (await _asyncLock.LockAsync(specificKey))
+        using (await _asyncLock.LockAsync(key))
         {
             // Clear all sources in parallel
-            var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(specificKey));
+            var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(key));
 
             await Task.WhenAll(clearTasks);
         }

@@ -56,6 +56,7 @@
             <Visible>True</Visible>
         </None>
         <None Remove="CacheManagerUnitTest\**" />
+        <None Remove="CacheManagerIntegrationTest\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -69,10 +70,12 @@
 
     <ItemGroup>
       <Compile Remove="CacheManagerUnitTest\**" />
+      <Compile Remove="CacheManagerIntegrationTest\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="CacheManagerUnitTest\**" />
+      <EmbeddedResource Remove="CacheManagerIntegrationTest\**" />
     </ItemGroup>
 
     <ItemGroup>
