@@ -16,8 +16,9 @@
         <RepositoryType>public</RepositoryType>
         <PackageTags>CacheManager</PackageTags>
         <PackageReleaseNotes>CacheManager</PackageReleaseNotes>
-        <AssemblyVersion>1.0.1</AssemblyVersion>
-        <FileVersion>1.0.1</FileVersion>
+        <AssemblyVersion>1.0.2</AssemblyVersion>
+        <FileVersion>1.0.2</FileVersion>
+        <Version>1.0.2</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>MHKarami97.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
@@ -26,7 +27,6 @@
         <ApplicationIcon>icon.ico</ApplicationIcon>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <IncludeContentInPack>true</IncludeContentInPack>
-        <Version>1.0.1</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

@@ -18,7 +18,6 @@ public class EasyCacheManagerTests : IAsyncLifetime
     private SqlConnection _sqlConnection = null!;
     private EasyCacheManager<string> _easyCacheManager = null!;
 
-
     public async Task InitializeAsync()
     {
         // Set up SQL Server container
