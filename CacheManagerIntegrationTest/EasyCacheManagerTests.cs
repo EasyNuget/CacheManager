@@ -20,34 +20,46 @@ public class EasyCacheManagerTests : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        // Set up SQL Server container
-        _sqlContainer = new MsSqlBuilder()
-            .WithImage(StaticData.SqlImage)
-            .WithDockerEndpoint(StaticData.DockerEndPoint)
-            .WithPassword(StaticData.DbPassword)
-            .WithAutoRemove(true)
-            .WithCleanUp(true)
-            .WithEnvironment("ACCEPT_EULA", "Y")
-            .WithEnvironment("SA_PASSWORD", StaticData.DbPassword)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(StaticData.SqlPort))
-            .Build();
+        string sqlConnectionString;
+        string redisConnectionString;
 
-        // Set up Redis container
-        _redisContainer = new RedisBuilder()
-            .WithImage(StaticData.RedisImage)
-            .WithDockerEndpoint(StaticData.DockerEndPoint)
-            .WithAutoRemove(true)
-            .WithCleanUp(true)
-            .WithPortBinding(StaticData.RedisPort, true)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(StaticData.RedisPort))
-            .Build();
+        // Check if we're in GitHub Actions or local development
+        var isCi = Environment.GetEnvironmentVariable("CI") == "true";
 
-        await _sqlContainer.StartAsync();
-        await _redisContainer.StartAsync();
+        if (isCi)
+        {
+            // GitHub Actions: Use Docker containers defined in the workflow
+            sqlConnectionString = "Server=localhost,1433;Database=master;User Id=sa;Password=YourStrong!Passw0rd;";
+            redisConnectionString = "localhost:6379";
+        }
+        else
+        {
+            _sqlContainer = new MsSqlBuilder()
+                .WithImage(StaticData.SqlImage)
+                .WithDockerEndpoint(StaticData.DockerEndPoint)
+                .WithPassword(StaticData.DbPassword)
+                .WithAutoRemove(true)
+                .WithCleanUp(true)
+                .WithEnvironment("ACCEPT_EULA", "Y")
+                .WithEnvironment("SA_PASSWORD", StaticData.DbPassword)
+                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(StaticData.SqlPort))
+                .Build();
 
-        // Build connection strings
-        var sqlConnectionString = _sqlContainer.GetConnectionString();
-        var redisConnectionString = _redisContainer.GetConnectionString();
+            _redisContainer = new RedisBuilder()
+                .WithImage(StaticData.RedisImage)
+                .WithDockerEndpoint(StaticData.DockerEndPoint)
+                .WithAutoRemove(true)
+                .WithCleanUp(true)
+                .WithPortBinding(StaticData.RedisPort, true)
+                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(StaticData.RedisPort))
+                .Build();
+
+            await _sqlContainer.StartAsync();
+            await _redisContainer.StartAsync();
+
+            sqlConnectionString = _sqlContainer.GetConnectionString();
+            redisConnectionString = _redisContainer.GetConnectionString();
+        }
 
         // Initialize Redis Connection
         _redisConnection = await ConnectionMultiplexer.ConnectAsync(redisConnectionString);
@@ -56,8 +68,10 @@ public class EasyCacheManagerTests : IAsyncLifetime
         _sqlConnection = new SqlConnection(sqlConnectionString);
         await _sqlConnection.OpenAsync();
 
+        // Ensure database setup
         await _sqlConnection.ExecuteAsync(StaticData.QueryToCreateTable);
 
+        // Initialize Cache Manager with all sources
         _easyCacheManager = new CacheBuilder<string>()
             .AddApi(new ApiConfig
             {
