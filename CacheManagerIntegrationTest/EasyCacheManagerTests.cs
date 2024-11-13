@@ -29,7 +29,7 @@ public class EasyCacheManagerTests : IAsyncLifetime
         if (isCi)
         {
             // GitHub Actions: Use Docker containers defined in the workflow
-            sqlConnectionString = "Server=localhost,1433;Database=master;User Id=sa;Password=YourStrong!Passw0rd;";
+            sqlConnectionString = "Server=localhost;Database=master;Persist Security Info=True;User ID=sa;Password=YourStrong!Passw0rd;MultipleActiveResultSets=True;TrustServerCertificate=True;Max Pool Size=500;Application Name=Test";
             redisConnectionString = "localhost:6379";
         }
         else
