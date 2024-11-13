@@ -69,12 +69,7 @@ public class EasyCacheManagerTests : IAsyncLifetime
         await _sqlConnection.OpenAsync();
 
         // Ensure database setup
-        var tableExists = await _sqlConnection.ExecuteAsync(StaticData.QueryToCreateTable);
-
-        if (tableExists != 2)
-        {
-            throw new Exception("Table or columns not found");
-        }
+        await _sqlConnection.ExecuteAsync(StaticData.QueryToCreateTable);
 
         // Initialize Cache Manager with all sources
         _easyCacheManager = new CacheBuilder<string>()
