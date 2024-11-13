@@ -17,9 +17,11 @@ public class DbCacheSource<T> : IBaseCacheSource<T>
     /// Create Get from Api
     /// </summary>
     /// <param name="config">Api Config</param>
+    /// <param name="priority">Priority</param>
     /// <exception cref="ArgumentException">Config is null</exception>
-    public DbCacheSource(DbConfig config)
+    public DbCacheSource(DbConfig config, int priority)
     {
+        Priority = priority;
         _config = config ?? throw new ArgumentException("Config is null", nameof(config));
     }
 
@@ -47,5 +49,9 @@ public class DbCacheSource<T> : IBaseCacheSource<T>
     /// <summary>
     /// Priority, Lowest priority - checked last
     /// </summary>
-    public int Priority => 3;
+#if NETSTANDARD2_0 || NET462
+    public int Priority { get; set; }
+#else
+     public int Priority { get; init; }
+#endif
 }

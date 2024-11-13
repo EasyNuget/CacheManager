@@ -17,9 +17,11 @@ public class RedisCacheSource<T> : ICacheSourceWithSetAndClear<T>
     /// Create Get from Api
     /// </summary>
     /// <param name="config">Api Config</param>
+    /// <param name="priority">Priority</param>
     /// <exception cref="ArgumentException">Config is null</exception>
-    public RedisCacheSource(RedisConfig config)
+    public RedisCacheSource(RedisConfig config, int priority)
     {
+        Priority = priority;
         _config = config ?? throw new ArgumentException("Config is null", nameof(config));
         var connectionMultiplexer = ConnectionMultiplexer.Connect(config.ConnectionString);
         _redisCache = connectionMultiplexer.GetDatabase();
@@ -58,5 +60,9 @@ public class RedisCacheSource<T> : ICacheSourceWithSetAndClear<T>
     /// <summary>
     /// Priority, Lowest priority - checked last
     /// </summary>
-    public int Priority => 2;
+#if NETSTANDARD2_0 || NET462
+    public int Priority { get; set; }
+#else
+     public int Priority { get; init; }
+#endif
 }

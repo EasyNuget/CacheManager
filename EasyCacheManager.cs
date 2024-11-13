@@ -17,7 +17,7 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     private readonly IEnumerable<ICacheSourceWithClear<T>> _cacheSourcesWithClear;
 
     private readonly AsyncKeyedLocker<string> _asyncLock;
-    private readonly ConcurrentDictionary<string, Task<T?>> _ongoingOperations;
+    private readonly ConcurrentDictionary<string, Task> _ongoingOperations;
 
     /// <summary>
     /// Create Manage Cache Easily
@@ -57,7 +57,7 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
             MaxCount = lockConfig.MaxCount
         });
 
-        _ongoingOperations = new ConcurrentDictionary<string, Task<T?>>();
+        _ongoingOperations = new ConcurrentDictionary<string, Task>();
     }
 
     /// <summary>
@@ -67,31 +67,45 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
     /// <returns>cached item</returns>
     public async Task<T?> GetAsync(string key)
     {
-        if (_ongoingOperations.TryGetValue(key, out var ongoingTask))
-        {
-            return await ongoingTask;
-        }
+        T? result = default;
 
-        using (await _asyncLock.LockOrNullAsync(key, _lockConfig.TimeOut))
+        foreach (var source in _cacheSources)
         {
-            try
+            result = await source.GetAsync(key);
+
+            if (result != null)
             {
-                // Double-check if another thread has completed the operation
-                if (_ongoingOperations.TryGetValue(key, out ongoingTask))
+                if (_ongoingOperations.TryGetValue(key, out var ongoingTask))
                 {
-                    return await ongoingTask;
+                    await ongoingTask;
                 }
 
-                var task = GetValueAsync(key);
-                _ongoingOperations.TryAdd(key, task);
+                using (await _asyncLock.LockOrNullAsync(key, _lockConfig.TimeOut))
+                {
+                    try
+                    {
+                        // Double-check if another thread has completed the operation
+                        if (_ongoingOperations.TryGetValue(key, out ongoingTask))
+                        {
+                            await ongoingTask;
+                        }
 
-                return await task;
-            }
-            finally
-            {
-                _ongoingOperations.TryRemove(key, out _);
+                        var task = SetToListAsync(key, result, source.Priority);
+                        _ongoingOperations.TryAdd(key, task);
+
+                        await task;
+
+                        break;
+                    }
+                    finally
+                    {
+                        _ongoingOperations.TryRemove(key, out _);
+                    }
+                }
             }
         }
+
+        return result;
     }
 
     /// <summary>
@@ -105,12 +119,12 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
         using (await _asyncLock.LockAsync(key))
         {
             // Clear all sources in parallel
-            var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(key));
+            var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(key)).ToList();
 
             await Task.WhenAll(clearTasks);
 
             // Set all sources in parallel
-            var setTasks = _cacheSourcesWithSet.Select(source => source.SetAsync(key, value));
+            var setTasks = _cacheSourcesWithSet.Select(source => source.SetAsync(key, value)).ToList();
 
             await Task.WhenAll(setTasks);
         }
@@ -125,7 +139,7 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
         using (await _asyncLock.LockAsync(key))
         {
             // Clear all sources in parallel
-            var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(key));
+            var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(key)).ToList();
 
             await Task.WhenAll(clearTasks);
         }
@@ -146,25 +160,11 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
 #endif
     }
 
-    private async Task<T?> GetValueAsync(string specificKey)
+    private async Task SetToListAsync(string key, T result, int priority)
     {
-        T? result = default;
-
-        foreach (var source in _cacheSources)
+        foreach (var higherPrioritySource in _cacheSourcesWithSet.Where(x => x.Priority < priority))
         {
-            result = await source.GetAsync(specificKey);
-
-            if (result != null)
-            {
-                foreach (var higherPrioritySource in _cacheSourcesWithSet.Where(x => x.Priority < source.Priority))
-                {
-                    await higherPrioritySource.SetAsync(specificKey, result);
-                }
-
-                break;
-            }
+            await higherPrioritySource.SetAsync(key, result);
         }
-
-        return result;
     }
 }

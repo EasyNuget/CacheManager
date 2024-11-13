@@ -16,5 +16,6 @@
     &lt;TestId&gt;xUnit::5785ED27-927D-4C46-A6E9-AF8C3123295A::net8.0::CacheManagerIntegrationTest.EasyCacheManagerTests.SetAsync_ShouldStoreData_InAllCacheSources&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::11A397C0-ECD3-4734-B5F5-E80037190D6D::net8.0::CacheManagerUnitTest.EasyCacheManagerTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::5785ED27-927D-4C46-A6E9-AF8C3123295A::net8.0::CacheManagerIntegrationTest.EasyCacheManagerTests.GetAsync_ShouldReturnData_FromDbAndSaveToMemoryAndRedis&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::5785ED27-927D-4C46-A6E9-AF8C3123295A::net8.0::CacheManagerIntegrationTest.EasyCacheManagerTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

@@ -18,7 +18,7 @@ public class CacheBuilder<T>
     /// <returns>CacheBuilder</returns>
     public CacheBuilder<T> AddMemory(MemoryConfig memoryConfig)
     {
-        _cacheSources.Add(new MemoryCacheSource<T>(memoryConfig));
+        _cacheSources.Add(new MemoryCacheSource<T>(memoryConfig, 1));
         return this;
     }
 
@@ -29,7 +29,7 @@ public class CacheBuilder<T>
     /// <returns>CacheBuilder</returns>
     public CacheBuilder<T> AddRedis(RedisConfig redisConfig)
     {
-        _cacheSources.Add(new RedisCacheSource<T>(redisConfig));
+        _cacheSources.Add(new RedisCacheSource<T>(redisConfig, 2));
         return this;
     }
 
@@ -40,10 +40,10 @@ public class CacheBuilder<T>
     /// <returns>CacheBuilder</returns>
     public CacheBuilder<T> AddDb(DbConfig dbConfig)
     {
-        _cacheSources.Add(new DbCacheSource<T>(dbConfig));
+        _cacheSources.Add(new DbCacheSource<T>(dbConfig, 3));
         return this;
     }
-    
+
     /// <summary>
     /// Add Api Cache
     /// </summary>
@@ -51,7 +51,18 @@ public class CacheBuilder<T>
     /// <returns>CacheBuilder</returns>
     public CacheBuilder<T> AddApi(ApiConfig apiConfig)
     {
-        _cacheSources.Add(new ApiCacheSource<T>(apiConfig));
+        _cacheSources.Add(new ApiCacheSource<T>(apiConfig, 4));
+        return this;
+    }
+
+    /// <summary>
+    /// Add custom cache source
+    /// </summary>
+    /// <param name="source">Your custom source</param>
+    /// <returns>CacheBuilder</returns>
+    public CacheBuilder<T> AddCustom(IBaseCacheSource<T> source)
+    {
+        _cacheSources.Add(source);
         return this;
     }
 
