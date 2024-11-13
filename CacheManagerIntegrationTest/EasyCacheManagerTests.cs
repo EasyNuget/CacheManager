@@ -92,14 +92,21 @@ public class EasyCacheManagerTests : IAsyncLifetime
 
     public async Task DisposeAsync()
     {
-        await _sqlContainer.StopAsync();
-        await _sqlContainer.DisposeAsync();
+        if (_sqlContainer is not null)
+        {
+            _sqlConnection.Dispose();
 
-        await _redisContainer.StopAsync();
-        await _redisContainer.DisposeAsync();
+            await _sqlContainer.StopAsync();
+            await _sqlContainer.DisposeAsync();
+        }
 
-        _redisConnection.Dispose();
-        _sqlConnection.Dispose();
+        if (_redisContainer is not null)
+        {
+            _redisConnection.Dispose();
+
+            await _redisContainer.StopAsync();
+            await _redisContainer.DisposeAsync();
+        }
     }
 
     [Fact]
