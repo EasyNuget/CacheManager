@@ -29,8 +29,8 @@ public class EasyCacheManagerTests : IAsyncLifetime
         if (isCi)
         {
             // GitHub Actions: Use Docker containers defined in the workflow
-            sqlConnectionString = "Server=localhost;Database=master;Persist Security Info=True;User ID=sa;Password=YourStrong!Passw0rd;MultipleActiveResultSets=True;TrustServerCertificate=True;Max Pool Size=500;Application Name=Test";
-            redisConnectionString = "localhost:6379";
+            sqlConnectionString = StaticData.SqlConnectionOnRunCi;
+            redisConnectionString = StaticData.RedisConnectionOnRunCi;
         }
         else
         {
@@ -69,7 +69,12 @@ public class EasyCacheManagerTests : IAsyncLifetime
         await _sqlConnection.OpenAsync();
 
         // Ensure database setup
-        await _sqlConnection.ExecuteAsync(StaticData.QueryToCreateTable);
+        var tableExists = await _sqlConnection.ExecuteAsync(StaticData.QueryToCreateTable);
+
+        if (tableExists != 2)
+        {
+            throw new Exception("Table or columns not found");
+        }
 
         // Initialize Cache Manager with all sources
         _easyCacheManager = new CacheBuilder<string>()
