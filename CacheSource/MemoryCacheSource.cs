@@ -7,7 +7,7 @@ namespace CacheManager.CacheSource;
 /// Get from Memory
 /// </summary>
 /// <typeparam name="T">Result</typeparam>
-public class MemoryCacheSource<T> : ICacheSourceWithSetAndClear<T>
+public class MemoryCacheSource<T> : ICacheSourceWithGetWithSetAndClear<T>
 {
     private readonly IMemoryCache _memoryCache;
     private readonly MemoryConfig _config;

@@ -9,7 +9,7 @@ namespace CacheManager;
 /// <typeparam name="T">EasyCacheManager</typeparam>
 public class CacheBuilder<T>
 {
-    private readonly List<IBaseCacheSource<T>> _cacheSources = [];
+    private readonly List<ICacheSourceWithGet<T>> _cacheSources = [];
 
     /// <summary>
     /// Add Memory Cache
@@ -40,7 +40,7 @@ public class CacheBuilder<T>
     /// <returns>CacheBuilder</returns>
     public CacheBuilder<T> AddDb(DbConfig dbConfig)
     {
-        _cacheSources.Add(new DbCacheSource<T>(dbConfig, 3));
+        _cacheSources.Add(new DbCacheSourceWithGet<T>(dbConfig, 3));
         return this;
     }
 
@@ -51,18 +51,18 @@ public class CacheBuilder<T>
     /// <returns>CacheBuilder</returns>
     public CacheBuilder<T> AddApi(ApiConfig apiConfig)
     {
-        _cacheSources.Add(new ApiCacheSource<T>(apiConfig, 4));
+        _cacheSources.Add(new ApiCacheSourceWithGet<T>(apiConfig, 4));
         return this;
     }
 
     /// <summary>
     /// Add custom cache source
     /// </summary>
-    /// <param name="source">Your custom source</param>
+    /// <param name="sourceWithGet">Your custom source</param>
     /// <returns>CacheBuilder</returns>
-    public CacheBuilder<T> AddCustom(IBaseCacheSource<T> source)
+    public CacheBuilder<T> AddCustom(ICacheSourceWithGet<T> sourceWithGet)
     {
-        _cacheSources.Add(source);
+        _cacheSources.Add(sourceWithGet);
         return this;
     }
 

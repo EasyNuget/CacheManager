@@ -8,7 +8,7 @@ namespace CacheManager.CacheSource;
 /// Get from Redis
 /// </summary>
 /// <typeparam name="T">Result</typeparam>
-public class RedisCacheSource<T> : ICacheSourceWithSetAndClear<T>
+public class RedisCacheSource<T> : ICacheSourceWithGetWithSetAndClear<T>
 {
     private readonly IDatabase _redisCache;
     private readonly RedisConfig _config;

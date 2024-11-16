@@ -4,7 +4,7 @@
 /// Base interface of cache provider with set ability
 /// </summary>
 /// <typeparam name="T">Item to cache</typeparam>
-public interface ICacheSourceWithSet<T> : IBaseCacheSource<T>
+public interface ICacheSourceWithGetWithSet<T> : ICacheSourceWithGet<T>
 {
     /// <summary>
     /// Set data to cache
