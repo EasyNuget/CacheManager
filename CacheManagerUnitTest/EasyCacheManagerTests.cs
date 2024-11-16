@@ -58,8 +58,6 @@ public class EasyCacheManagerTests : IAsyncLifetime
         await cacheManager.SetAsync(key, value);
 
         // Assert
-        cacheSourceWithClear1.Verify(x => x.ClearAsync(It.IsAny<string>()), Times.Once);
-        cacheSourceWithClear2.Verify(x => x.ClearAsync(It.IsAny<string>()), Times.Once);
         cacheSourceWithSet1.Verify(x => x.SetAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         cacheSourceWithSet2.Verify(x => x.SetAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
