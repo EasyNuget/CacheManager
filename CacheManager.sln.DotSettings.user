@@ -18,4 +18,21 @@
     &lt;TestId&gt;xUnit::5785ED27-927D-4C46-A6E9-AF8C3123295A::net8.0::CacheManagerIntegrationTest.EasyCacheManagerTests.GetAsync_ShouldReturnData_FromDbAndSaveToMemoryAndRedis&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::5785ED27-927D-4C46-A6E9-AF8C3123295A::net8.0::CacheManagerIntegrationTest.EasyCacheManagerTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5425edee_002D3fe4_002D4abc_002D83e1_002Dd88153e7f5ff/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="LoadTest_GetFromApiJust50Percent_AllShouldBeValid" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7F4F5CDE-95DE-40B0-8A7E-3264A93E207F::net8.0::CacheManagerLoadTest.EasyCacheManagerLoadTest.LoadTest_GetFromApiJust50Percent_AllShouldBeValid&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b128d21f_002D5bd9_002D4d94_002D939c_002D9fc6196a2468/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="LoadTest_GetAndSet_AllShouldBeValid #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7F4F5CDE-95DE-40B0-8A7E-3264A93E207F::net8.0::CacheManagerLoadTest.EasyCacheManagerLoadTest.LoadTest_GetAndSet_AllShouldBeValid&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=cf70924c_002D4df1_002D4f7e_002Db47f_002D6331d660c138/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="LoadTest_GetAndSet_AllShouldBeValid" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7F4F5CDE-95DE-40B0-8A7E-3264A93E207F::net8.0::CacheManagerLoadTest.EasyCacheManagerLoadTest.LoadTest_GetAndSet_AllShouldBeValid&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7F4F5CDE-95DE-40B0-8A7E-3264A93E207F::net8.0::CacheManagerLoadTest.EasyCacheManagerLoadTest.LoadTest_GetFromApi_AllShouldBeValid&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7F4F5CDE-95DE-40B0-8A7E-3264A93E207F::net8.0::CacheManagerLoadTest.EasyCacheManagerLoadTest.LoadTest_GetFromApiJust50Percent_AllShouldBeValid&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

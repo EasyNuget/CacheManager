@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using CacheManager;
 using CacheManager.Config;
 using Dapper;
@@ -8,9 +9,9 @@ using StackExchange.Redis;
 using Testcontainers.MsSql;
 using Testcontainers.Redis;
 
-namespace CacheManagerIntegrationTest;
+namespace CacheManagerLoadTest;
 
-public class EasyCacheManagerTests : IAsyncLifetime
+public class EasyCacheManagerLoadTest : IAsyncLifetime
 {
     private MsSqlContainer _sqlContainer = null!;
     private RedisContainer _redisContainer = null!;
@@ -119,51 +120,128 @@ public class EasyCacheManagerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task GetAsync_ShouldReturnData_FromDbAndSaveToMemoryAndRedis()
+    public async Task LoadTest_GetAndSet_AllShouldBeValid()
     {
-        // Arrange
-        await _sqlConnection.ExecuteAsync(StaticData.QueryToInsert);
+        const int numberOfTasks = StaticData.NumberOfTasks;
 
-        // Act
-        var result = await _easyCacheManager.GetAsync(StaticData.Key);
+        var tasks = new List<Task>();
 
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(StaticData.Value, result);
+        for (var i = 0; i < numberOfTasks; i++)
+        {
+            tasks.Add(Task.Run(async () =>
+            {
+                var randomKey = Guid.NewGuid().ToString();
 
-        // Clear
-        await _sqlConnection.ExecuteAsync(StaticData.QueryToDelete);
+                await _easyCacheManager.SetAsync(randomKey, randomKey);
+
+                var response = await _easyCacheManager.GetAsync(randomKey);
+
+                if (response != randomKey)
+                {
+                    throw new Exception("not valid response");
+                }
+            }));
+        }
+
+        await Task.WhenAll(tasks);
+
+        Assert.True(true, "All tasks completed successfully.");
     }
 
     [Fact]
-    public async Task GetAsync_ShouldReturnData_FromApiAndSaveToMemoryAndRedis()
+    public async Task LoadTest_GetFromApi_AllShouldBeValid()
     {
-        // Arrange
-        using var httpTest = new HttpTest();
+        const int numberOfTasks = StaticData.NumberOfTasks;
 
-        httpTest.ForCallsTo(StaticData.Api)
-            .WithVerb(HttpMethod.Get)
-            .RespondWithJson(StaticData.Value);
+        var tasks = new List<Task>();
 
-        // Act
-        var result = await _easyCacheManager.GetAsync(StaticData.Key);
+        for (var i = 0; i < numberOfTasks; i++)
+        {
+            tasks.Add(Task.Run(async () =>
+            {
+                using var httpTest = new HttpTest();
 
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(StaticData.Value, result);
+                var randomKey = Guid.NewGuid().ToString();
+
+                httpTest.ForCallsTo(StaticData.Api)
+                    .WithVerb(HttpMethod.Get)
+                    .RespondWithJson(randomKey);
+
+                var response = await _easyCacheManager.GetAsync(randomKey);
+
+                if (response != randomKey)
+                {
+                    throw new Exception("not valid response");
+                }
+            }));
+        }
+
+        await Task.WhenAll(tasks);
+
+        Assert.True(true, "All tasks completed successfully.");
     }
 
     [Fact]
-    public async Task SetAsync_ShouldStoreData_InAllCacheSources()
+    public async Task LoadTest_GetFromApiJust50Percent_AllShouldBeValid()
     {
-        // Arrange
+        const int numberOfTasks = StaticData.NumberOfTasks;
+        var taskAdd = new List<Task>();
+        var taskGet = new List<Task>();
+        var keys = new ConcurrentBag<string>();
 
-        // Act
-        await _easyCacheManager.SetAsync(StaticData.Key, StaticData.Value);
+        for (var i = 0; i < numberOfTasks / 2; i++)
+        {
+            taskAdd.Add(Task.Run(async () =>
+            {
+                using var httpTest = new HttpTest();
 
-        var resultFromMemory = await _easyCacheManager.GetAsync(StaticData.Key);
+                var randomKey = Guid.NewGuid().ToString();
 
-        // Assert
-        Assert.Equal(StaticData.Value, resultFromMemory);
+                httpTest.ForCallsTo(StaticData.Api)
+                    .WithVerb(HttpMethod.Get)
+                    .RespondWithJson(randomKey);
+
+                var response = await _easyCacheManager.GetAsync(randomKey);
+
+                if (response != randomKey)
+                {
+                    throw new Exception("not valid response");
+                }
+
+                keys.Add(randomKey);
+            }));
+        }
+
+        await Task.WhenAll(taskAdd);
+
+        for (var i = 0; i < numberOfTasks / 2; i++)
+        {
+            taskGet.Add(Task.Run(async () =>
+            {
+                using var httpTest = new HttpTest();
+
+                if (keys.TryTake(out var randomKey))
+                {
+                    httpTest.ForCallsTo(StaticData.Api)
+                        .WithVerb(HttpMethod.Get)
+                        .RespondWithJson(null);
+
+                    var response = await _easyCacheManager.GetAsync(randomKey);
+
+                    if (response != randomKey)
+                    {
+                        throw new Exception("not valid response");
+                    }
+                }
+                else
+                {
+                    throw new Exception("not valid key");
+                }
+            }));
+        }
+
+        await Task.WhenAll(taskGet);
+
+        Assert.True(true, "All tasks completed successfully.");
     }
 }
