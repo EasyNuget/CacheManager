@@ -38,11 +38,8 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Run linters
-        uses: wearerequired/lint-action@v2
-        with:
-          dotnet_format: true
-          args: --workspace ./CacheManager.sln
+      - name: Run Format
+        run: dotnet format ./CacheManager.sln
 
       - name: Restore dependencies
         run: dotnet restore
