@@ -11,6 +11,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{FD
 		LICENSE.txt = LICENSE.txt
 		icon.ico = icon.ico
 		icon.jpg = icon.jpg
+		.github\ISSUE_TEMPLATE\10_bug_report.yml = .github\ISSUE_TEMPLATE\10_bug_report.yml
+		.github\ISSUE_TEMPLATE\20_feature-request.yml = .github\ISSUE_TEMPLATE\20_feature-request.yml
+		.github\ISSUE_TEMPLATE\30_api-proposal.md = .github\ISSUE_TEMPLATE\30_api-proposal.md
+		.github\ISSUE_TEMPLATE\config.yml = .github\ISSUE_TEMPLATE\config.yml
+		.github\policies\labelManagement.issueOpened.yml = .github\policies\labelManagement.issueOpened.yml
+		.github\policies\labelManagement.issueUpdated.yml = .github\policies\labelManagement.issueUpdated.yml
+		.github\policies\labelManagement.prOpened.yml = .github\policies\labelManagement.prOpened.yml
+		.github\policies\labelManagement.prUpdated.yml = .github\policies\labelManagement.prUpdated.yml
+		.github\policies\scheduledSearch.closeStaleIssuesAndPrs.yml = .github\policies\scheduledSearch.closeStaleIssuesAndPrs.yml
+		.github\policies\scheduledSearch.markNoRecentActivity.yml = .github\policies\scheduledSearch.markNoRecentActivity.yml
+		.github\pull_request_template.md = .github\pull_request_template.md
+		SECURITY.md = SECURITY.md
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManagerUnitTest", "CacheManagerUnitTest\CacheManagerUnitTest.csproj", "{11A397C0-ECD3-4734-B5F5-E80037190D6D}"
