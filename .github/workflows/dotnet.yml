@@ -42,6 +42,7 @@ jobs:
         uses: wearerequired/lint-action@v2
         with:
           dotnet_format: true
+          args: --workspace ./CacheManager.sln
 
       - name: Restore dependencies
         run: dotnet restore
