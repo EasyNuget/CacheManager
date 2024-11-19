@@ -2,6 +2,8 @@
 
     <PropertyGroup>
         <TargetFrameworks>net8.0;netstandard2.0;net462</TargetFrameworks>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <AnalysisMode>All</AnalysisMode>
         <LangVersion>12.0</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -58,6 +60,8 @@
         <None Remove="CacheManagerUnitTest\**" />
         <None Remove="CacheManagerIntegrationTest\**" />
         <None Remove="CacheManagerLoadTest\**" />
+        <None Remove="CODE_OF_CONDUCT.md" />
+        <None Remove="IssueManagementPolicies.md" />
     </ItemGroup>
 
     <ItemGroup>
@@ -73,12 +77,21 @@
       <Compile Remove="CacheManagerUnitTest\**" />
       <Compile Remove="CacheManagerIntegrationTest\**" />
       <Compile Remove="CacheManagerLoadTest\**" />
+      <Compile Update="Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="CacheManagerUnitTest\**" />
       <EmbeddedResource Remove="CacheManagerIntegrationTest\**" />
       <EmbeddedResource Remove="CacheManagerLoadTest\**" />
+      <EmbeddedResource Update="Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>

@@ -6,10 +6,10 @@
 /// <typeparam name="T">Item to cache</typeparam>
 public interface ICacheSourceWithGetWithSet<T> : ICacheSourceWithGet<T>
 {
-    /// <summary>
-    /// Set data to cache
-    /// </summary>
-    /// <param name="key">Key</param>
-    /// <param name="data">Data to cache</param>
-    Task SetAsync(string key, T data);
+	/// <summary>
+	/// Set data to cache
+	/// </summary>
+	/// <param name="key">Key</param>
+	/// <param name="data">Data to cache</param>
+	Task SetAsync(string key, T data);
 }

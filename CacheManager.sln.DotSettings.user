@@ -6,10 +6,10 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AIMemoryCache_002Ecs_002Fl_003AC_0021_003FUsers_003FM_002EKarami_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E2_003Fresharper_002Dhost_003FDecompilerCache_003Fdecompiler_003F51bdb2654e8f4169b707ee2bc215de367920_003Fda_003F84f277c4_003FIMemoryCache_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AReflectionAbstractionExtensions_002Ecs_002Fl_003AC_0021_003FUsers_003FM_002EKarami_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E2_003Fresharper_002Dhost_003FSourcesCache_003Fbce78fe52d797846b2e554f7e0fb8c831d7f4aeee133452a18131aee2eb9b2_003FReflectionAbstractionExtensions_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fe1090c1_002D7294_002D42a0_002Dbaa0_002D3de50f99e3f7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="EasyCacheManagerTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::11A397C0-ECD3-4734-B5F5-E80037190D6D::net8.0::CacheManagerUnitTest.EasyCacheManagerTests&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=CacheManager_002FResources/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean>
 	
 	
 	

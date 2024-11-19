@@ -6,9 +6,9 @@
 /// <typeparam name="T">Item to cache</typeparam>
 public interface ICacheSourceWithGetWithClear<T> : ICacheSourceWithGet<T>
 {
-    /// <summary>
-    /// Clear from cache with key
-    /// </summary>
-    /// <param name="key"></param>
-    Task ClearAsync(string key);
+	/// <summary>
+	/// Clear from cache with key
+	/// </summary>
+	/// <param name="key"></param>
+	Task ClearAsync(string key);
 }

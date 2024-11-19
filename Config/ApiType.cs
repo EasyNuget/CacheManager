@@ -5,13 +5,13 @@
 /// </summary>
 public enum ApiType
 {
-    /// <summary>
-    /// GET
-    /// </summary>
-    Get = 1,
-    
-    /// <summary>
-    /// POST
-    /// </summary>
-    Post = 2
+	/// <summary>
+	/// GET
+	/// </summary>
+	Get = 1,
+
+	/// <summary>
+	/// POST
+	/// </summary>
+	Post = 2
 }
