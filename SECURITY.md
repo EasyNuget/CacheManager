@@ -8,7 +8,7 @@ If you believe you have found a security vulnerability please report it to us as
 
 Instead, please report them with email
 
-If you prefer to submit without logging in, send email to [mhkarami97@gmail.com](mailto:secure@microsoft.com).  If possible, encrypt your message with our PGP key; please download it from the [Microsoft Security Response Center PGP Key page](https://www.microsoft.com/en-us/msrc/pgp-key-msrc).
+If you prefer to submit without logging in, send email to [mhkarami97@gmail.com](mhkarami97@gmail.com).  If possible, encrypt your message with our PGP key; please download it from the [Microsoft Security Response Center PGP Key page](https://www.microsoft.com/en-us/msrc/pgp-key-msrc).
 
 You should receive a response within 24 hours. If for some reason you do not, please follow up via email to ensure we received your original message.
 
