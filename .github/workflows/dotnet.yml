@@ -22,7 +22,7 @@ jobs:
           --health-cmd="/opt/mssql-tools/bin/sqlcmd -U sa -P YourStrong!Passw0rd -Q 'SELECT 1'"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=10 
+          --health-retries=10
       redis:
         image: redis:latest
         ports:
@@ -31,12 +31,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v2
+        with:
+          dotnet_format: true
 
       - name: Restore dependencies
         run: dotnet restore
