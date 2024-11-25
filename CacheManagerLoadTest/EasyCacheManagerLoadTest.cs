@@ -17,7 +17,7 @@ public class EasyCacheManagerLoadTest : IAsyncLifetime
 	private RedisContainer _redisContainer = null!;
 	private IConnectionMultiplexer _redisConnection = null!;
 	private SqlConnection _sqlConnection = null!;
-	private EasyCacheManager<string> _easyCacheManager = null!;
+	private EasyCacheManager _easyCacheManager = null!;
 
 	public async Task InitializeAsync()
 	{
@@ -82,7 +82,7 @@ public class EasyCacheManagerLoadTest : IAsyncLifetime
 		_ = await _sqlConnection.ExecuteAsync(StaticData.QueryToCreateTable).ConfigureAwait(false);
 
 		// Initialize Cache Manager with all sources
-		_easyCacheManager = new CacheBuilder<string>()
+		_easyCacheManager = new CacheBuilder()
 			.AddApi(new ApiConfig { Url = StaticData.Api })
 			.AddRedis(new RedisConfig { ConnectionString = redisConnectionString })
 			.AddDb(new DbConfig { ConnectionString = sqlConnectionString, Query = StaticData.QueryToSelect })
@@ -124,7 +124,7 @@ public class EasyCacheManagerLoadTest : IAsyncLifetime
 
 				await _easyCacheManager.SetAsync(randomKey, randomKey).ConfigureAwait(true);
 
-				var response = await _easyCacheManager.GetAsync(randomKey).ConfigureAwait(true);
+				var response = await _easyCacheManager.GetAsync<string>(randomKey).ConfigureAwait(true);
 
 				if (response != randomKey)
 				{
@@ -157,7 +157,7 @@ public class EasyCacheManagerLoadTest : IAsyncLifetime
 					.WithVerb(HttpMethod.Get)
 					.RespondWithJson(randomKey);
 
-				var response = await _easyCacheManager.GetAsync(randomKey).ConfigureAwait(true);
+				var response = await _easyCacheManager.GetAsync<string>(randomKey).ConfigureAwait(true);
 
 				if (response != randomKey)
 				{
@@ -191,7 +191,7 @@ public class EasyCacheManagerLoadTest : IAsyncLifetime
 					.WithVerb(HttpMethod.Get)
 					.RespondWithJson(randomKey);
 
-				var response = await _easyCacheManager.GetAsync(randomKey).ConfigureAwait(true);
+				var response = await _easyCacheManager.GetAsync<string>(randomKey).ConfigureAwait(true);
 
 				if (response != randomKey)
 				{
@@ -216,7 +216,7 @@ public class EasyCacheManagerLoadTest : IAsyncLifetime
 						.WithVerb(HttpMethod.Get)
 						.RespondWithJson(null);
 
-					var response = await _easyCacheManager.GetAsync(randomKey).ConfigureAwait(true);
+					var response = await _easyCacheManager.GetAsync<string>(randomKey).ConfigureAwait(true);
 
 					if (response != randomKey)
 					{

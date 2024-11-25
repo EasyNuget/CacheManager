@@ -1,4 +1,4 @@
-﻿using CacheManager.Config;
+using CacheManager.Config;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace CacheManager.CacheSource;
@@ -6,8 +6,7 @@ namespace CacheManager.CacheSource;
 /// <summary>
 /// Get from Memory
 /// </summary>
-/// <typeparam name="T">Result</typeparam>
-public class MemoryCacheSource<T> : ICacheSourceWithGetWithSetAndClear<T>
+public class MemoryCacheSource : ICacheSourceWithGetWithSetAndClear
 {
 	private readonly MemoryCache _memoryCache;
 	private readonly MemoryConfig _config;
@@ -30,7 +29,7 @@ public class MemoryCacheSource<T> : ICacheSourceWithGetWithSetAndClear<T>
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <returns>Result</returns>
-	public Task<T?> GetAsync(string key)
+	public Task<T?> GetAsync<T>(string key)
 	{
 		_ = _memoryCache.TryGetValue(key, out T? value);
 		return Task.FromResult(value);
@@ -41,7 +40,7 @@ public class MemoryCacheSource<T> : ICacheSourceWithGetWithSetAndClear<T>
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <param name="data">Data to cache</param>
-	public Task SetAsync(string key, T data)
+	public Task SetAsync<T>(string key, T data)
 	{
 		_ = _memoryCache.Set(key, data, _config.CacheTime);
 		return Task.CompletedTask;
@@ -61,7 +60,7 @@ public class MemoryCacheSource<T> : ICacheSourceWithGetWithSetAndClear<T>
 	/// Priority, Lowest priority - checked last
 	/// </summary>
 #if NETSTANDARD2_0 || NET462
-    public int Priority { get; set; }
+	public int Priority { get; set; }
 #else
 	public int Priority { get; init; }
 #endif

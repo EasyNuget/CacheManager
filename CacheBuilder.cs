@@ -1,4 +1,4 @@
-﻿using CacheManager.CacheSource;
+using CacheManager.CacheSource;
 using CacheManager.Config;
 
 namespace CacheManager;
@@ -6,19 +6,18 @@ namespace CacheManager;
 /// <summary>
 /// Simple cache builder
 /// </summary>
-/// <typeparam name="T">EasyCacheManager</typeparam>
-public class CacheBuilder<T>
+public class CacheBuilder
 {
-	private readonly List<ICacheSourceWithGet<T>> _cacheSources = [];
+	private readonly List<ICacheSourceWithGet> _cacheSources = [];
 
 	/// <summary>
 	/// Add Memory Cache
 	/// </summary>
 	/// <param name="memoryConfig">Config</param>
 	/// <returns>CacheBuilder</returns>
-	public CacheBuilder<T> AddMemory(MemoryConfig memoryConfig)
+	public CacheBuilder AddMemory(MemoryConfig memoryConfig)
 	{
-		_cacheSources.Add(new MemoryCacheSource<T>(memoryConfig, 1));
+		_cacheSources.Add(new MemoryCacheSource(memoryConfig, 1));
 		return this;
 	}
 
@@ -27,9 +26,9 @@ public class CacheBuilder<T>
 	/// </summary>
 	/// <param name="redisConfig">Config</param>
 	/// <returns>CacheBuilder</returns>
-	public CacheBuilder<T> AddRedis(RedisConfig redisConfig)
+	public CacheBuilder AddRedis(RedisConfig redisConfig)
 	{
-		_cacheSources.Add(new RedisCacheSource<T>(redisConfig, 2));
+		_cacheSources.Add(new RedisCacheSource(redisConfig, 2));
 		return this;
 	}
 
@@ -38,9 +37,9 @@ public class CacheBuilder<T>
 	/// </summary>
 	/// <param name="dbConfig">Config</param>
 	/// <returns>CacheBuilder</returns>
-	public CacheBuilder<T> AddDb(DbConfig dbConfig)
+	public CacheBuilder AddDb(DbConfig dbConfig)
 	{
-		_cacheSources.Add(new DbCacheSourceWithGet<T>(dbConfig, 3));
+		_cacheSources.Add(new DbCacheSourceWithGet(dbConfig, 3));
 		return this;
 	}
 
@@ -49,9 +48,9 @@ public class CacheBuilder<T>
 	/// </summary>
 	/// <param name="apiConfig">Config</param>
 	/// <returns>CacheBuilder</returns>
-	public CacheBuilder<T> AddApi(ApiConfig apiConfig)
+	public CacheBuilder AddApi(ApiConfig apiConfig)
 	{
-		_cacheSources.Add(new ApiCacheSourceWithGet<T>(apiConfig, 4));
+		_cacheSources.Add(new ApiCacheSourceWithGet(apiConfig, 4));
 		return this;
 	}
 
@@ -60,7 +59,7 @@ public class CacheBuilder<T>
 	/// </summary>
 	/// <param name="sourceWithGet">Your custom source</param>
 	/// <returns>CacheBuilder</returns>
-	public CacheBuilder<T> AddCustom(ICacheSourceWithGet<T> sourceWithGet)
+	public CacheBuilder AddCustom(ICacheSourceWithGet sourceWithGet)
 	{
 		_cacheSources.Add(sourceWithGet);
 		return this;
@@ -71,5 +70,5 @@ public class CacheBuilder<T>
 	/// </summary>
 	/// <param name="lockConfig">Config</param>
 	/// <returns>EasyCacheManager</returns>
-	public EasyCacheManager<T> Build(LockConfig lockConfig) => new(_cacheSources, lockConfig);
+	public EasyCacheManager Build(LockConfig lockConfig) => new(_cacheSources, lockConfig);
 }

@@ -53,7 +53,7 @@ also if found on db or api it will set to redis and memory.
 This package use AsyncKeyedLock to handle lock on get, set and clear on specific key. so you use this package on multi thread program.  
 
 ### Info
-You can use all type like class, object, string to cache, for example EasyCacheManager<string>, EasyCacheManager<MyClass>  
+You can use all type like class, object, string to cache, for example EasyCacheManager, EasyCacheManager<MyClass>  
 Priority should be unique, you can't crate EasyCacheManager with list of providers with same Priority
 
 ### Clear cache

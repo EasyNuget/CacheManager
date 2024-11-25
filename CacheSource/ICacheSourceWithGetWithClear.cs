@@ -1,10 +1,9 @@
-﻿namespace CacheManager.CacheSource;
+namespace CacheManager.CacheSource;
 
 /// <summary>
 /// Base interface of cache provider with clear ability
 /// </summary>
-/// <typeparam name="T">Item to cache</typeparam>
-public interface ICacheSourceWithGetWithClear<T> : ICacheSourceWithGet<T>
+public interface ICacheSourceWithGetWithClear : ICacheSourceWithGet
 {
 	/// <summary>
 	/// Clear from cache with key

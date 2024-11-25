@@ -16,7 +16,7 @@ public class EasyCacheManagerTests : IAsyncLifetime
 	private RedisContainer _redisContainer = null!;
 	private IConnectionMultiplexer _redisConnection = null!;
 	private SqlConnection _sqlConnection = null!;
-	private EasyCacheManager<string> _easyCacheManager = null!;
+	private EasyCacheManager _easyCacheManager = null!;
 
 	public async Task InitializeAsync()
 	{
@@ -81,7 +81,7 @@ public class EasyCacheManagerTests : IAsyncLifetime
 		await _sqlConnection.ExecuteAsync(StaticData.QueryToCreateTable).ConfigureAwait(false);
 
 		// Initialize Cache Manager with all sources
-		_easyCacheManager = new CacheBuilder<string>()
+		_easyCacheManager = new CacheBuilder()
 			.AddApi(new ApiConfig { Url = StaticData.Api })
 			.AddRedis(new RedisConfig { ConnectionString = redisConnectionString })
 			.AddDb(new DbConfig { ConnectionString = sqlConnectionString, Query = StaticData.QueryToSelect })
@@ -117,7 +117,7 @@ public class EasyCacheManagerTests : IAsyncLifetime
 		_ = await _sqlConnection.ExecuteAsync(StaticData.QueryToInsert).ConfigureAwait(true);
 
 		// Act
-		var result = await _easyCacheManager.GetAsync(StaticData.Key).ConfigureAwait(true);
+		var result = await _easyCacheManager.GetAsync<string>(StaticData.Key).ConfigureAwait(true);
 
 		// Assert
 		Assert.NotNull(result);
@@ -138,7 +138,7 @@ public class EasyCacheManagerTests : IAsyncLifetime
 			.RespondWithJson(StaticData.Value);
 
 		// Act
-		var result = await _easyCacheManager.GetAsync(StaticData.Key).ConfigureAwait(true);
+		var result = await _easyCacheManager.GetAsync<string>(StaticData.Key).ConfigureAwait(true);
 
 		// Assert
 		Assert.NotNull(result);
@@ -153,7 +153,7 @@ public class EasyCacheManagerTests : IAsyncLifetime
 		// Act
 		await _easyCacheManager.SetAsync(StaticData.Key, StaticData.Value).ConfigureAwait(true);
 
-		var resultFromMemory = await _easyCacheManager.GetAsync(StaticData.Key).ConfigureAwait(true);
+		var resultFromMemory = await _easyCacheManager.GetAsync<string>(StaticData.Key).ConfigureAwait(true);
 
 		// Assert
 		Assert.Equal(StaticData.Value, resultFromMemory);
