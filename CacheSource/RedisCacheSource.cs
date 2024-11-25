@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using CacheManager.Config;
 using StackExchange.Redis;
 
@@ -7,8 +7,7 @@ namespace CacheManager.CacheSource;
 /// <summary>
 /// Get from Redis
 /// </summary>
-/// <typeparam name="T">Result</typeparam>
-public class RedisCacheSource<T> : ICacheSourceWithGetWithSetAndClear<T>
+public class RedisCacheSource : ICacheSourceWithGetWithSetAndClear
 {
 	private readonly IDatabase _redisCache;
 	private readonly RedisConfig _config;
@@ -32,8 +31,9 @@ public class RedisCacheSource<T> : ICacheSourceWithGetWithSetAndClear<T>
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <returns>Result</returns>
-	public async Task<T?> GetAsync(string key)
+	public async Task<T?> GetAsync<T>(string key)
 	{
+
 		var value = await _redisCache.StringGetAsync(key).ConfigureAwait(false);
 		return value.HasValue ? JsonSerializer.Deserialize<T>(value!) : default;
 	}
@@ -43,7 +43,7 @@ public class RedisCacheSource<T> : ICacheSourceWithGetWithSetAndClear<T>
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <param name="data">Data to cache</param>
-	public async Task SetAsync(string key, T data)
+	public async Task SetAsync<T>(string key, T data)
 	{
 		_ = await _redisCache.StringSetAsync(key, JsonSerializer.Serialize(data), _config.CacheTime).ConfigureAwait(false);
 	}
@@ -61,7 +61,7 @@ public class RedisCacheSource<T> : ICacheSourceWithGetWithSetAndClear<T>
 	/// Priority, Lowest priority - checked last
 	/// </summary>
 #if NETSTANDARD2_0 || NET462
-    public int Priority { get; set; }
+	public int Priority { get; set; }
 #else
 	public int Priority { get; init; }
 #endif

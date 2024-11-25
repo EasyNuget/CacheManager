@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using AsyncKeyedLock;
@@ -10,12 +10,12 @@ namespace CacheManager;
 /// <summary>
 /// Manage Cache Easily
 /// </summary>
-public class EasyCacheManager<T> : IEasyCacheManager<T>
+public class EasyCacheManager : IEasyCacheManager
 {
 	private readonly LockConfig _lockConfig;
-	private readonly IEnumerable<ICacheSourceWithGet<T>> _cacheSources;
-	private readonly IEnumerable<ICacheSourceWithGetWithSet<T>> _cacheSourcesWithSet;
-	private readonly IEnumerable<ICacheSourceWithGetWithClear<T>> _cacheSourcesWithClear;
+	private readonly IEnumerable<ICacheSourceWithGet> _cacheSources;
+	private readonly IEnumerable<ICacheSourceWithGetWithSet> _cacheSourcesWithSet;
+	private readonly IEnumerable<ICacheSourceWithGetWithClear> _cacheSourcesWithClear;
 
 	private readonly AsyncKeyedLocker<string> _asyncLock;
 	private readonly ConcurrentDictionary<string, Task> _ongoingOperations;
@@ -28,7 +28,7 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
 	/// <exception cref="ArgumentException">CacheSources is null</exception>
 	/// <exception cref="ArgumentException">Options is null</exception>
 	/// <exception cref="ArgumentException">Duplicate priority values found</exception>
-	public EasyCacheManager([Required] IEnumerable<ICacheSourceWithGet<T>> cacheSources, LockConfig lockConfig)
+	public EasyCacheManager([Required] IEnumerable<ICacheSourceWithGet> cacheSources, LockConfig lockConfig)
 	{
 		if (cacheSources is null)
 		{
@@ -52,12 +52,14 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
 		}
 
 		_cacheSources = baseCacheSources.OrderBy(x => x.Priority);
-		_cacheSourcesWithSet = baseCacheSources.OfType<ICacheSourceWithGetWithSet<T>>().OrderBy(x => x.Priority);
-		_cacheSourcesWithClear = baseCacheSources.OfType<ICacheSourceWithGetWithClear<T>>().OrderBy(x => x.Priority);
+		_cacheSourcesWithSet = baseCacheSources.OfType<ICacheSourceWithGetWithSet>().OrderBy(x => x.Priority);
+		_cacheSourcesWithClear = baseCacheSources.OfType<ICacheSourceWithGetWithClear>().OrderBy(x => x.Priority);
 
 		_asyncLock = new AsyncKeyedLocker<string>(new AsyncKeyedLockOptions
 		{
-			PoolSize = Environment.ProcessorCount * lockConfig.PoolSize, PoolInitialFill = lockConfig.PoolInitialFill, MaxCount = lockConfig.MaxCount
+			PoolSize = Environment.ProcessorCount * lockConfig.PoolSize,
+			PoolInitialFill = lockConfig.PoolInitialFill,
+			MaxCount = lockConfig.MaxCount
 		});
 
 		_ongoingOperations = new ConcurrentDictionary<string, Task>();
@@ -68,13 +70,13 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <returns>cached item</returns>
-	public async Task<T?> GetAsync(string key)
+	public async Task<T?> GetAsync<T>(string key)
 	{
 		T? result = default;
 
 		foreach (var source in _cacheSources)
 		{
-			result = await source.GetAsync(key).ConfigureAwait(false);
+			result = await source.GetAsync<T>(key).ConfigureAwait(false);
 
 			if (result != null)
 			{
@@ -117,7 +119,7 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
 	/// <param name="key">Key</param>
 	/// <param name="value">Value</param>
 	/// <returns>cached item</returns>
-	public async Task SetAsync(string key, T value)
+	public async Task SetAsync<T>(string key, T value)
 	{
 		using (await _asyncLock.LockAsync(key).ConfigureAwait(false))
 		{
@@ -158,7 +160,7 @@ public class EasyCacheManager<T> : IEasyCacheManager<T>
 #endif
 	}
 
-	private async Task SetToListAsync(string key, T result, int priority)
+	private async Task SetToListAsync<T>(string key, T result, int priority)
 	{
 		foreach (var higherPrioritySource in _cacheSourcesWithSet.Where(x => x.Priority < priority))
 		{

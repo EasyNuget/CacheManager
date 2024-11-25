@@ -1,4 +1,4 @@
-﻿using CacheManager.Config;
+using CacheManager.Config;
 using Flurl.Http;
 
 namespace CacheManager.CacheSource;
@@ -6,8 +6,7 @@ namespace CacheManager.CacheSource;
 /// <summary>
 /// Get from Api
 /// </summary>
-/// <typeparam name="T">Result</typeparam>
-public class ApiCacheSourceWithGet<T> : ICacheSourceWithGet<T>
+public class ApiCacheSourceWithGet : ICacheSourceWithGet
 {
 	private readonly ApiConfig _config;
 
@@ -28,7 +27,7 @@ public class ApiCacheSourceWithGet<T> : ICacheSourceWithGet<T>
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <returns>Result</returns>
-	public async Task<T?> GetAsync(string key)
+	public async Task<T?> GetAsync<T>(string key)
 	{
 		var result = _config.Type switch
 		{
@@ -53,7 +52,7 @@ public class ApiCacheSourceWithGet<T> : ICacheSourceWithGet<T>
 	/// Priority, Lowest priority - checked last
 	/// </summary>
 #if NETSTANDARD2_0 || NET462
-    public int Priority { get; set; }
+	public int Priority { get; set; }
 #else
 	public int Priority { get; init; }
 #endif
