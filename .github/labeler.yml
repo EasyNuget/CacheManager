@@ -1,0 +1,8 @@
+"load-test":
+  - "CacheManagerLoadTest/**"
+"unit-test":
+  - "CacheManagerUnitTest/**"
+"integration-test":
+  - "CacheManagerIntegrationTest/**"
+"cache-source":
+  - "CacheSource/**"
