@@ -9,7 +9,7 @@ First install package:
 then you can use like this:
 
 ```csharp
-var easyCacheManager = new CacheBuilder<string>()
+var easyCacheManager = new CacheBuilder()
             .AddApi(new ApiConfig
             {
                 Url = StaticData.Api
@@ -26,7 +26,7 @@ var easyCacheManager = new CacheBuilder<string>()
             .AddMemory(new MemoryConfig())
             .Build(new LockConfig());
 
-var result = await easyCacheManager.GetAsync("My-Key");
+var result = await easyCacheManager.GetAsync<string>("My-Key");
 ```
 You can create your own provider with these interfaces:
 
@@ -60,5 +60,13 @@ Priority should be unique, you can't crate EasyCacheManager with list of provide
 With `ClearCacheAsync` method you can clear specific key on all providers that implement `ICacheSourceWithClear` or `ICacheSourceWithSetAndClear`  
 
 ### Set
-With `SetAsync` you can manually set value to provides that that implement `ICacheSourceWithSet` or `ICacheSourceWithSetAndClear`  
+With `SetAsync` you can manually set value to provides that that implement `ICacheSourceWithSet` or `ICacheSourceWithSetAndClear`
+
+
+## Contributors
+
+The following contributors have made this project better:
+
+[See the full list of contributors](./CONTRIBUTORS.md)
+
 
