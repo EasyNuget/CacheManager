@@ -26,7 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{FD
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		IssueManagementPolicies.md = IssueManagementPolicies.md
 		.editorConfig = .editorConfig
-		.github\workflows\codeql.yml = .github\workflows\codeql.yml
 		.github\workflows\greetings.yml = .github\workflows\greetings.yml
 		.github\workflows\label.yml = .github\workflows\label.yml
 		.github\workflows\stale.yml = .github\workflows\stale.yml
