@@ -1,16 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManager", "CacheManager.csproj", "{AFF46B10-D86C-4232-A335-91BE8D65392B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{FD37789C-D65D-494C-AFA2-925481673054}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		.gitignore = .gitignore
-		MHKarami97.snk = MHKarami97.snk
-		README.md = README.md
-		LICENSE.txt = LICENSE.txt
-		icon.ico = icon.ico
-		icon.jpg = icon.jpg
 		.github\ISSUE_TEMPLATE\10_bug_report.yml = .github\ISSUE_TEMPLATE\10_bug_report.yml
 		.github\ISSUE_TEMPLATE\20_feature-request.yml = .github\ISSUE_TEMPLATE\20_feature-request.yml
 		.github\ISSUE_TEMPLATE\30_api-proposal.md = .github\ISSUE_TEMPLATE\30_api-proposal.md
@@ -21,22 +14,33 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{FD
 		.github\policies\labelManagement.prUpdated.yml = .github\policies\labelManagement.prUpdated.yml
 		.github\policies\scheduledSearch.closeStaleIssuesAndPrs.yml = .github\policies\scheduledSearch.closeStaleIssuesAndPrs.yml
 		.github\policies\scheduledSearch.markNoRecentActivity.yml = .github\policies\scheduledSearch.markNoRecentActivity.yml
-		.github\pull_request_template.md = .github\pull_request_template.md
-		SECURITY.md = SECURITY.md
-		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
-		IssueManagementPolicies.md = IssueManagementPolicies.md
 		.editorConfig = .editorConfig
 		.github\workflows\greetings.yml = .github\workflows\greetings.yml
 		.github\workflows\label.yml = .github\workflows\label.yml
 		.github\workflows\stale.yml = .github\workflows\stale.yml
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		CONTRIBUTORS.md = CONTRIBUTORS.md
+		icon.ico = icon.ico
+		icon.jpg = icon.jpg
+		IssueManagementPolicies.md = IssueManagementPolicies.md
+		LICENSE.txt = LICENSE.txt
+		SECURITY.md = SECURITY.md
+		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManager", "CacheManager\CacheManager.csproj", "{AFF46B10-D86C-4232-A335-91BE8D65392B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManagerUnitTest", "CacheManagerUnitTest\CacheManagerUnitTest.csproj", "{11A397C0-ECD3-4734-B5F5-E80037190D6D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManagerIntegrationTest", "CacheManagerIntegrationTest\CacheManagerIntegrationTest.csproj", "{5785ED27-927D-4C46-A6E9-AF8C3123295A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManagerLoadTest", "CacheManagerLoadTest\CacheManagerLoadTest.csproj", "{7F4F5CDE-95DE-40B0-8A7E-3264A93E207F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManager.Redis", "CacheManager.Redis\CacheManager.Redis.csproj", "{F7C9B3D6-71B1-410E-B219-751270F9A1CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManager.Database", "CacheManager.Database\CacheManager.Database.csproj", "{AE17DE23-0E95-445A-A361-8283479C1218}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7735FEB7-0AE9-4365-91C1-FC7325517028}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,5 +64,18 @@ Global
 		{7F4F5CDE-95DE-40B0-8A7E-3264A93E207F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F4F5CDE-95DE-40B0-8A7E-3264A93E207F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F4F5CDE-95DE-40B0-8A7E-3264A93E207F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7C9B3D6-71B1-410E-B219-751270F9A1CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7C9B3D6-71B1-410E-B219-751270F9A1CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7C9B3D6-71B1-410E-B219-751270F9A1CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7C9B3D6-71B1-410E-B219-751270F9A1CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE17DE23-0E95-445A-A361-8283479C1218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE17DE23-0E95-445A-A361-8283479C1218}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE17DE23-0E95-445A-A361-8283479C1218}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE17DE23-0E95-445A-A361-8283479C1218}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5785ED27-927D-4C46-A6E9-AF8C3123295A} = {7735FEB7-0AE9-4365-91C1-FC7325517028}
+		{7F4F5CDE-95DE-40B0-8A7E-3264A93E207F} = {7735FEB7-0AE9-4365-91C1-FC7325517028}
+		{11A397C0-ECD3-4734-B5F5-E80037190D6D} = {7735FEB7-0AE9-4365-91C1-FC7325517028}
 	EndGlobalSection
 EndGlobal

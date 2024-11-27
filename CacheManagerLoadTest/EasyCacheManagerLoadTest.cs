@@ -1,6 +1,10 @@
 using System.Collections.Concurrent;
 using CacheManager;
 using CacheManager.Config;
+using CacheManager.Database;
+using CacheManager.Database.Config;
+using CacheManager.Redis;
+using CacheManager.Redis.Config;
 using Dapper;
 using DotNet.Testcontainers.Builders;
 using Flurl.Http.Testing;

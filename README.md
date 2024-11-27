@@ -6,6 +6,14 @@ First install package:
 
 > https://www.nuget.org/packages/EasyMultiCacheManager
 
+If you want Redis then install:  
+
+> https://www.nuget.org/packages/EasyMultiCacheManager.Redis
+
+If you want Database then install:
+
+> https://www.nuget.org/packages/EasyMultiCacheManager.Database
+
 then you can use like this:
 
 ```csharp

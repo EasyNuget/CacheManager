@@ -8,10 +8,10 @@ public class LockConfig
 	/// <summary>
 	/// The maximum number of requests for the semaphore that can be granted concurrently. Defaults to 1.
 	/// </summary>
-#if NETSTANDARD2_0 || NET462
-    public int MaxCount { get; set; } = 1;
-#else
+#if NET8_0_OR_GREATER
 	public int MaxCount { get; init; } = 1;
+#else
+	public int MaxCount { get; set; } = 1;
 #endif
 
 	/// <summary>
@@ -20,27 +20,27 @@ public class LockConfig
 	/// the pool. Set to 0 to disable pooling (strongly recommended to use). Defaults to 20.
 	/// used like this on code: Environment.ProcessorCount * PoolSize
 	/// </summary>
-#if NETSTANDARD2_0 || NET462
-    public int PoolSize { get; set; } = 20;
-#else
+#if NET8_0_OR_GREATER
 	public int PoolSize { get; init; } = 20;
+#else
+	public int PoolSize { get; set; } = 20;
 #endif
 
 	/// <summary>
 	/// The number of items to fill the pool with during initialization. A value of -1 means to fill up to the pool size. Defaults to 1.
 	/// </summary>
-#if NETSTANDARD2_0 || NET462
-    public int PoolInitialFill { get; set; } = 1;
-#else
+#if NET8_0_OR_GREATER
 	public int PoolInitialFill { get; init; } = 1;
+#else
+	public int PoolInitialFill { get; set; } = 1;
 #endif
 
 	/// <summary>
 	/// Time Out
 	/// </summary>
-#if NETSTANDARD2_0 || NET462
-    public TimeSpan TimeOut { get; set; } = TimeSpan.FromSeconds(5);
-#else
+#if NET8_0_OR_GREATER
 	public TimeSpan TimeOut { get; init; } = TimeSpan.FromSeconds(5);
+#else
+	public TimeSpan TimeOut { get; set; } = TimeSpan.FromSeconds(5);
 #endif
 }

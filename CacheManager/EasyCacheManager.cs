@@ -57,9 +57,7 @@ public class EasyCacheManager : IEasyCacheManager
 
 		_asyncLock = new AsyncKeyedLocker<string>(new AsyncKeyedLockOptions
 		{
-			PoolSize = Environment.ProcessorCount * lockConfig.PoolSize,
-			PoolInitialFill = lockConfig.PoolInitialFill,
-			MaxCount = lockConfig.MaxCount
+			PoolSize = Environment.ProcessorCount * lockConfig.PoolSize, PoolInitialFill = lockConfig.PoolInitialFill, MaxCount = lockConfig.MaxCount
 		});
 
 		_ongoingOperations = new ConcurrentDictionary<string, Task>();
@@ -153,10 +151,10 @@ public class EasyCacheManager : IEasyCacheManager
 		_asyncLock.Dispose();
 		GC.SuppressFinalize(this);
 
-#if NETSTANDARD2_0 || NET462
-		return default;
-#else
+#if NET8_0_OR_GREATER
 		return ValueTask.CompletedTask;
+#else
+		return default;
 #endif
 	}
 

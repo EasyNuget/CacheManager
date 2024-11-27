@@ -51,9 +51,9 @@ public class ApiCacheSourceWithGet : ICacheSourceWithGet
 	/// <summary>
 	/// Priority, Lowest priority - checked last
 	/// </summary>
-#if NETSTANDARD2_0 || NET462
-	public int Priority { get; set; }
-#else
+#if NET8_0_OR_GREATER
 	public int Priority { get; init; }
+#else
+	public int Priority { get; set; }
 #endif
 }

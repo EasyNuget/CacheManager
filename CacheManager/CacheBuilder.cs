@@ -14,32 +14,20 @@ public class CacheBuilder
 	/// Add Memory Cache
 	/// </summary>
 	/// <param name="memoryConfig">Config</param>
+	/// <param name="priority">Default is 1</param>
 	/// <returns>CacheBuilder</returns>
-	public CacheBuilder AddMemory(MemoryConfig memoryConfig)
+	public CacheBuilder AddMemory(MemoryConfig memoryConfig, int priority = 1)
 	{
-		_cacheSources.Add(new MemoryCacheSource(memoryConfig, 1));
-		return this;
-	}
+#if NET8_0_OR_GREATER
+		ArgumentNullException.ThrowIfNull(memoryConfig);
+#else
+		if (memoryConfig is null)
+		{
+			throw new ArgumentNullException(nameof(memoryConfig));
+		}
+#endif
 
-	/// <summary>
-	/// Add Redis Cache
-	/// </summary>
-	/// <param name="redisConfig">Config</param>
-	/// <returns>CacheBuilder</returns>
-	public CacheBuilder AddRedis(RedisConfig redisConfig)
-	{
-		_cacheSources.Add(new RedisCacheSource(redisConfig, 2));
-		return this;
-	}
-
-	/// <summary>
-	/// Add Sql Server Cache
-	/// </summary>
-	/// <param name="dbConfig">Config</param>
-	/// <returns>CacheBuilder</returns>
-	public CacheBuilder AddDb(DbConfig dbConfig)
-	{
-		_cacheSources.Add(new DbCacheSourceWithGet(dbConfig, 3));
+		_cacheSources.Add(new MemoryCacheSource(memoryConfig, priority));
 		return this;
 	}
 
@@ -47,10 +35,21 @@ public class CacheBuilder
 	/// Add Api Cache
 	/// </summary>
 	/// <param name="apiConfig">Config</param>
+	/// <param name="priority">Default is 2</param>
 	/// <returns>CacheBuilder</returns>
-	public CacheBuilder AddApi(ApiConfig apiConfig)
+	public CacheBuilder AddApi(ApiConfig apiConfig, int priority = 2)
 	{
-		_cacheSources.Add(new ApiCacheSourceWithGet(apiConfig, 4));
+#if NET8_0_OR_GREATER
+		ArgumentNullException.ThrowIfNull(apiConfig);
+#else
+		if (apiConfig is null)
+		{
+			throw new ArgumentNullException(nameof(apiConfig));
+		}
+#endif
+
+		_cacheSources.Add(new ApiCacheSourceWithGet(apiConfig, priority));
+
 		return this;
 	}
 
@@ -61,7 +60,17 @@ public class CacheBuilder
 	/// <returns>CacheBuilder</returns>
 	public CacheBuilder AddCustom(ICacheSourceWithGet sourceWithGet)
 	{
+#if NET8_0_OR_GREATER
+		ArgumentNullException.ThrowIfNull(sourceWithGet);
+#else
+		if (sourceWithGet is null)
+		{
+			throw new ArgumentNullException(nameof(sourceWithGet));
+		}
+#endif
+
 		_cacheSources.Add(sourceWithGet);
+
 		return this;
 	}
 

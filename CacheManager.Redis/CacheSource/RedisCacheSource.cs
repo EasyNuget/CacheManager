@@ -1,8 +1,9 @@
 using System.Text.Json;
-using CacheManager.Config;
+using CacheManager.CacheSource;
+using CacheManager.Redis.Config;
 using StackExchange.Redis;
 
-namespace CacheManager.CacheSource;
+namespace CacheManager.Redis.CacheSource;
 
 /// <summary>
 /// Get from Redis
@@ -33,7 +34,6 @@ public class RedisCacheSource : ICacheSourceWithGetWithSetAndClear
 	/// <returns>Result</returns>
 	public async Task<T?> GetAsync<T>(string key)
 	{
-
 		var value = await _redisCache.StringGetAsync(key).ConfigureAwait(false);
 		return value.HasValue ? JsonSerializer.Deserialize<T>(value!) : default;
 	}
@@ -60,9 +60,9 @@ public class RedisCacheSource : ICacheSourceWithGetWithSetAndClear
 	/// <summary>
 	/// Priority, Lowest priority - checked last
 	/// </summary>
-#if NETSTANDARD2_0 || NET462
-	public int Priority { get; set; }
-#else
+#if NET8_0_OR_GREATER
 	public int Priority { get; init; }
+#else
+	public int Priority { get; set; }
 #endif
 }

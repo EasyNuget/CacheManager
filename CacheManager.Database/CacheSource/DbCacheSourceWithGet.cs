@@ -1,10 +1,11 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using CacheManager.Config;
+using CacheManager.CacheSource;
+using CacheManager.Database.Config;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
-namespace CacheManager.CacheSource;
+namespace CacheManager.Database.CacheSource;
 
 /// <summary>
 /// Get from Db
@@ -33,17 +34,17 @@ public class DbCacheSourceWithGet : ICacheSourceWithGet
 	[SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task")]
 	public async Task<T?> GetAsync<T>(string key)
 	{
-#if NETSTANDARD2_0 || NET462
-		using var connection = new SqlConnection(_config.ConnectionString);
-#else
+#if NET8_0_OR_GREATER
 		await using var connection = new SqlConnection(_config.ConnectionString);
+#else
+		using var connection = new SqlConnection(_config.ConnectionString);
 #endif
 		var result = await connection.QuerySingleOrDefaultAsync<T>(
 			_config.Query,
 			new { Key = key },
 			commandType: CommandType.Text,
 			commandTimeout: _config.TimeOutOnSecond
-			).ConfigureAwait(false);
+		).ConfigureAwait(false);
 
 		return result;
 	}
@@ -51,9 +52,9 @@ public class DbCacheSourceWithGet : ICacheSourceWithGet
 	/// <summary>
 	/// Priority, Lowest priority - checked last
 	/// </summary>
-#if NETSTANDARD2_0 || NET462
-	public int Priority { get; set; }
-#else
+#if NET8_0_OR_GREATER
 	public int Priority { get; init; }
+#else
+	public int Priority { get; set; }
 #endif
 }

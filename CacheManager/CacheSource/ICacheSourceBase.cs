@@ -14,9 +14,9 @@ public interface ICacheSourceBase
 	/// The value of <see cref="Priority"/> should be between 1 and 100.
 	/// </remarks>
 	[Range(1, 100)]
-#if NETSTANDARD2_0 || NET462
-     int Priority { get; set; }
-#else
+#if NET8_0_OR_GREATER
 	int Priority { get; init; }
+#else
+	int Priority { get; set; }
 #endif
 }

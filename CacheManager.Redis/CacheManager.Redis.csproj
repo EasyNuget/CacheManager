@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;netstandard2.0;net462</TargetFrameworks>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<AnalysisMode>All</AnalysisMode>
+		<LangVersion>12.0</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Title>CacheManager.Redis</Title>
+		<Authors>MHKarami97</Authors>
+		<Description>Easy Cache Manager Redis</Description>
+		<Copyright>https://github.com/MHKarami97/CacheManager</Copyright>
+		<PackageProjectUrl>https://github.com/MHKarami97/CacheManager</PackageProjectUrl>
+		<PackageIcon>icon.jpg</PackageIcon>
+		<RepositoryUrl>https://github.com/MHKarami97/CacheManager</RepositoryUrl>
+		<RepositoryType>public</RepositoryType>
+		<PackageTags>CacheManager.Redis</PackageTags>
+		<PackageReleaseNotes>CacheManager.Redis</PackageReleaseNotes>
+		<AssemblyVersion>1.2.0</AssemblyVersion>
+		<FileVersion>1.2.0</FileVersion>
+		<Version>1.2.0</Version>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\CacheManager\MHKarami97.snk</AssemblyOriginatorKeyFile>
+		<PublicSign>true</PublicSign>
+		<PackageId>EasyMultiCacheManager.Redis</PackageId>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<ApplicationIcon>..\icon.ico</ApplicationIcon>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<IncludeContentInPack>true</IncludeContentInPack>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+		<DocumentationFile>bin\Debug\CacheManager.Redis.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<DocumentationFile>bin\Release\CacheManager.Redis.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="StackExchange.Redis" Version="2.8.16"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CacheManager\CacheManager.csproj"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\icon.jpg">
+			<Pack>true</Pack>
+			<PackagePath></PackagePath>
+			<Visible>True</Visible>
+		</None>
+		<None Include="..\LICENSE.txt">
+			<Pack>true</Pack>
+			<PackagePath></PackagePath>
+			<Visible>True</Visible>
+		</None>
+		<None Include="..\README.md">
+			<Pack>true</Pack>
+			<PackagePath></PackagePath>
+			<Visible>True</Visible>
+		</None>
+	</ItemGroup>
+	
+</Project>
