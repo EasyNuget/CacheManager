@@ -21,8 +21,13 @@ public interface IEasyCacheManager : IAsyncDisposable
 	Task SetAsync<T>(string key, T value);
 
 	/// <summary>
-	/// Clear cached item from all
+	/// Clear cached item by key
 	/// </summary>
 	/// <param name="key">Key</param>
 	Task ClearCacheAsync(string key);
+
+	/// <summary>
+	/// Clear cached item from all
+	/// </summary>
+	Task ClearAllCacheAsync();
 }

@@ -8,44 +8,41 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Title>CacheManager</Title>
+		<Title>CacheManagerClear.Kafka</Title>
 		<Authors>MHKarami97</Authors>
-		<Description>Easy Cache Manager</Description>
+		<Description>Easy Cache Manager Clear Kafka Provilder</Description>
 		<Copyright>https://github.com/MHKarami97/CacheManager</Copyright>
 		<PackageProjectUrl>https://github.com/MHKarami97/CacheManager</PackageProjectUrl>
 		<PackageIcon>icon.jpg</PackageIcon>
 		<RepositoryUrl>https://github.com/MHKarami97/CacheManager</RepositoryUrl>
 		<RepositoryType>public</RepositoryType>
-		<PackageTags>CacheManager</PackageTags>
-		<PackageReleaseNotes>CacheManager</PackageReleaseNotes>
+		<PackageTags>CacheManagerClear.Kafka</PackageTags>
+		<PackageReleaseNotes>CacheManagerClear.Kafka</PackageReleaseNotes>
 		<AssemblyVersion>2.1.0</AssemblyVersion>
 		<FileVersion>2.1.0</FileVersion>
 		<Version>2.1.0</Version>
 		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>MHKarami97.snk</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>..\CacheManager\MHKarami97.snk</AssemblyOriginatorKeyFile>
 		<PublicSign>true</PublicSign>
-		<PackageId>EasyMultiCacheManager</PackageId>
+		<PackageId>EasyMultiCacheManager.Clear.Kafka</PackageId>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<ApplicationIcon>..\icon.ico</ApplicationIcon>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<IncludeContentInPack>true</IncludeContentInPack>
 		<PackageOutputPath>..\PackagesRelease</PackageOutputPath>
+		<PackageOutputPath>..\PackagesRelease</PackageOutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-		<DocumentationFile>bin\Debug\CacheManager.xml</DocumentationFile>
+		<DocumentationFile>bin\Debug\CacheManagerClear.Kafka.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<DocumentationFile>bin\Release\CacheManager.xml</DocumentationFile>
+		<DocumentationFile>bin\Release\CacheManagerClear.Kafka.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Update="Resources.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Resources.resx</DependentUpon>
-		</Compile>
+		<ProjectReference Include="..\CacheManagerClear\CacheManagerClear.csproj"/>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -67,8 +64,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AsyncKeyedLock" Version="7.1.3"/>
-		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1"/>
+	  <PackageReference Include="Confluent.Kafka" Version="2.6.1" />
 	</ItemGroup>
 
 </Project>

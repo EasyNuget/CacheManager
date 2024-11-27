@@ -18,9 +18,9 @@
 		<RepositoryType>public</RepositoryType>
 		<PackageTags>CacheManager.Database</PackageTags>
 		<PackageReleaseNotes>CacheManager.Database</PackageReleaseNotes>
-		<AssemblyVersion>2.0.0</AssemblyVersion>
-		<FileVersion>2.0.0</FileVersion>
-		<Version>2.0.0</Version>
+		<AssemblyVersion>2.1.0</AssemblyVersion>
+		<FileVersion>2.1.0</FileVersion>
+		<Version>2.1.0</Version>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\CacheManager\MHKarami97.snk</AssemblyOriginatorKeyFile>
 		<PublicSign>true</PublicSign>
@@ -29,6 +29,7 @@
 		<ApplicationIcon>..\icon.ico</ApplicationIcon>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<IncludeContentInPack>true</IncludeContentInPack>
+		<PackageOutputPath>..\PackagesRelease</PackageOutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
