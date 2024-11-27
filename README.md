@@ -16,8 +16,9 @@ If you want Database then install:
 
 If you want Api then install:
 
-> https://www.nuget.org/packages/EasyMultiCacheManager.Api
-then you can use like this:
+> https://www.nuget.org/packages/EasyMultiCacheManager.Api  
+
+Then you can use like this:  
 
 ```csharp
 var easyCacheManager = new CacheBuilder()
