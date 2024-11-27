@@ -18,9 +18,9 @@
 		<RepositoryType>public</RepositoryType>
 		<PackageTags>CacheManager.Redis</PackageTags>
 		<PackageReleaseNotes>CacheManager.Redis</PackageReleaseNotes>
-		<AssemblyVersion>1.2.0</AssemblyVersion>
-		<FileVersion>1.2.0</FileVersion>
-		<Version>1.2.0</Version>
+		<AssemblyVersion>2.0.0</AssemblyVersion>
+		<FileVersion>2.0.0</FileVersion>
+		<Version>2.0.0</Version>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\CacheManager\MHKarami97.snk</AssemblyOriginatorKeyFile>
 		<PublicSign>true</PublicSign>
@@ -41,6 +41,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="StackExchange.Redis" Version="2.8.16"/>
+		<PackageReference Include="System.Text.Json" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

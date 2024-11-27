@@ -4,6 +4,8 @@ using CacheManager.Database;
 using CacheManager.Database.Config;
 using CacheManager.Redis;
 using CacheManager.Redis.Config;
+using CacheManagerApi;
+using CacheManagerApi.Config;
 using Dapper;
 using DotNet.Testcontainers.Builders;
 using Flurl.Http.Testing;

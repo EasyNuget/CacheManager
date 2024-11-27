@@ -1,7 +1,9 @@
-using CacheManager.Config;
+using CacheManager;
+using CacheManager.CacheSource;
+using CacheManagerApi.Config;
 using Flurl.Http;
 
-namespace CacheManager.CacheSource;
+namespace CacheManagerApi.CacheSource;
 
 /// <summary>
 /// Get from Api

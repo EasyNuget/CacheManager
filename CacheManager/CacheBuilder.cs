@@ -32,28 +32,6 @@ public class CacheBuilder
 	}
 
 	/// <summary>
-	/// Add Api Cache
-	/// </summary>
-	/// <param name="apiConfig">Config</param>
-	/// <param name="priority">Default is 2</param>
-	/// <returns>CacheBuilder</returns>
-	public CacheBuilder AddApi(ApiConfig apiConfig, int priority = 2)
-	{
-#if NET8_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(apiConfig);
-#else
-		if (apiConfig is null)
-		{
-			throw new ArgumentNullException(nameof(apiConfig));
-		}
-#endif
-
-		_cacheSources.Add(new ApiCacheSourceWithGet(apiConfig, priority));
-
-		return this;
-	}
-
-	/// <summary>
 	/// Add custom cache source
 	/// </summary>
 	/// <param name="sourceWithGet">Your custom source</param>

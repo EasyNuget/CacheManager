@@ -8,23 +8,23 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Title>CacheManager.Database</Title>
+		<Title>CacheManager.Api</Title>
 		<Authors>MHKarami97</Authors>
-		<Description>Easy Cache Manager Database</Description>
+		<Description>Easy Cache Manager Api</Description>
 		<Copyright>https://github.com/MHKarami97/CacheManager</Copyright>
 		<PackageProjectUrl>https://github.com/MHKarami97/CacheManager</PackageProjectUrl>
 		<PackageIcon>icon.jpg</PackageIcon>
 		<RepositoryUrl>https://github.com/MHKarami97/CacheManager</RepositoryUrl>
 		<RepositoryType>public</RepositoryType>
-		<PackageTags>CacheManager.Database</PackageTags>
-		<PackageReleaseNotes>CacheManager.Database</PackageReleaseNotes>
+		<PackageTags>CacheManager.Api</PackageTags>
+		<PackageReleaseNotes>CacheManager.Api</PackageReleaseNotes>
 		<AssemblyVersion>2.0.0</AssemblyVersion>
 		<FileVersion>2.0.0</FileVersion>
 		<Version>2.0.0</Version>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\CacheManager\MHKarami97.snk</AssemblyOriginatorKeyFile>
 		<PublicSign>true</PublicSign>
-		<PackageId>EasyMultiCacheManager.Database</PackageId>
+		<PackageId>EasyMultiCacheManager.Api</PackageId>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<ApplicationIcon>..\icon.ico</ApplicationIcon>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -32,17 +32,12 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-		<DocumentationFile>bin\Debug\CacheManager.Database.xml</DocumentationFile>
+		<DocumentationFile>bin\Debug\CacheManager.Api.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<DocumentationFile>bin\Release\CacheManager.Database.xml</DocumentationFile>
+		<DocumentationFile>bin\Release\CacheManager.Api.xml</DocumentationFile>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Dapper" Version="2.1.35"/>
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2"/>
-	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\CacheManager\CacheManager.csproj"/>
@@ -64,6 +59,10 @@
 			<PackagePath></PackagePath>
 			<Visible>True</Visible>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Flurl.Http" Version="4.0.2"/>
 	</ItemGroup>
 
 </Project>

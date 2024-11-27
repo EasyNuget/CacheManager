@@ -1,4 +1,4 @@
-﻿namespace CacheManager.Config;
+﻿namespace CacheManagerApi.Config;
 
 /// <summary>
 /// Config of Redis cache

@@ -14,6 +14,9 @@ If you want Database then install:
 
 > https://www.nuget.org/packages/EasyMultiCacheManager.Database
 
+If you want Api then install:
+
+> https://www.nuget.org/packages/EasyMultiCacheManager.Api
 then you can use like this:
 
 ```csharp
