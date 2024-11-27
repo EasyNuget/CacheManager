@@ -57,6 +57,15 @@ public class MemoryCacheSource : ICacheSourceWithGetWithSetAndClear
 	}
 
 	/// <summary>
+	/// Clear all from cache
+	/// </summary>
+	public Task ClearAllAsync()
+	{
+		_memoryCache.Clear();
+		return Task.CompletedTask;
+	}
+
+	/// <summary>
 	/// Priority, Lowest priority - checked last
 	/// </summary>
 #if NET8_0_OR_GREATER

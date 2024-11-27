@@ -19,7 +19,6 @@ public class EasyCacheManager : IEasyCacheManager
 
 	private readonly AsyncKeyedLocker<string> _asyncLock;
 	private readonly ConcurrentDictionary<string, Task> _ongoingOperations;
-	private readonly ConcurrentDictionary<string, object?> _cachedKeys;
 
 	/// <summary>
 	/// Create Manage Cache Easily
@@ -62,7 +61,6 @@ public class EasyCacheManager : IEasyCacheManager
 		});
 
 		_ongoingOperations = new ConcurrentDictionary<string, Task>();
-		_cachedKeys = new ConcurrentDictionary<string, object?>();
 	}
 
 	/// <summary>
@@ -100,8 +98,6 @@ public class EasyCacheManager : IEasyCacheManager
 
 						await task.ConfigureAwait(false);
 
-						_ = _cachedKeys.TryAdd(key, null);
-
 						break;
 					}
 					finally
@@ -129,8 +125,6 @@ public class EasyCacheManager : IEasyCacheManager
 			var setTasks = _cacheSourcesWithSet.Select(source => source.SetAsync(key, value)).ToList();
 
 			await Task.WhenAll(setTasks).ConfigureAwait(false);
-
-			_ = _cachedKeys.TryAdd(key, null);
 		}
 	}
 
@@ -146,8 +140,6 @@ public class EasyCacheManager : IEasyCacheManager
 			var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAsync(key)).ToList();
 
 			await Task.WhenAll(clearTasks).ConfigureAwait(false);
-
-			_ = _cachedKeys.TryRemove(key, out _);
 		}
 	}
 
@@ -156,7 +148,8 @@ public class EasyCacheManager : IEasyCacheManager
 	/// </summary>
 	public async Task ClearAllCacheAsync()
 	{
-		var clearTasks = _cachedKeys.Keys.Select(ClearCacheAsync).ToList();
+		// Clear all sources in parallel
+		var clearTasks = _cacheSourcesWithClear.Select(source => source.ClearAllAsync()).ToList();
 
 		await Task.WhenAll(clearTasks).ConfigureAwait(false);
 	}
