@@ -1,4 +1,4 @@
-﻿namespace CacheManager.Database.Config;
+﻿namespace CacheManager.SqlServer.Config;
 
 /// <summary>
 /// Config of Database cache
@@ -19,9 +19,9 @@ public class DbConfig
 	/// Query that get data from db
 	/// </summary>
 #if NET8_0_OR_GREATER
-	public required string Query { get; init; }
+	public required string GetQuery { get; init; }
 #else
-	public string Query { get; set; }
+	public string GetQuery { get; set; }
 #endif
 
 	/// <summary>

@@ -1,33 +1,33 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using CacheManager.CacheSource;
-using CacheManager.Database.Config;
+using CacheManager.SqlServer.Config;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
-namespace CacheManager.Database.CacheSource;
+namespace CacheManager.SqlServer.CacheSource;
 
 /// <summary>
-/// Get from Db
+/// Get from SqlServer Db
 /// </summary>
-public class DbCacheSourceWithGet : ICacheSourceWithGet
+public class SqlServerDbCacheSourceWithGet : ICacheSourceWithGet
 {
 	private readonly DbConfig _config;
 
 	/// <summary>
-	/// Create Get from Api
+	/// Create Get from SqlServer Db
 	/// </summary>
-	/// <param name="config">Api Config</param>
+	/// <param name="config">Db Config</param>
 	/// <param name="priority">Priority</param>
 	/// <exception cref="ArgumentException">Config is null</exception>
-	public DbCacheSourceWithGet(DbConfig config, int priority)
+	public SqlServerDbCacheSourceWithGet(DbConfig config, int priority)
 	{
 		Priority = priority;
 		_config = config ?? throw new ArgumentException(Resources.NullValue, nameof(config));
 	}
 
 	/// <summary>
-	/// Get from cache
+	/// Get from SqlServer Db
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <returns>Result</returns>
@@ -40,7 +40,7 @@ public class DbCacheSourceWithGet : ICacheSourceWithGet
 		using var connection = new SqlConnection(_config.ConnectionString);
 #endif
 		var result = await connection.QuerySingleOrDefaultAsync<T>(
-			_config.Query,
+			_config.GetQuery,
 			new { Key = key },
 			commandType: CommandType.Text,
 			commandTimeout: _config.TimeOutOnSecond

@@ -26,20 +26,45 @@ var easyCacheManager = new CacheBuilder()
             {
                 Url = StaticData.Api
             })
-            .AddRedis(new RedisConfig
-            {
-                ConnectionString = redisConnectionString
-            })
-            .AddDb(new DbConfig
+            .AddSqlServerWithGet(new DbConfig
             {
                 ConnectionString = sqlConnectionString,
-                Query = StaticData.QueryToSelect
+                GetQuery = StaticData.GetQuery
+            })
+			.AddRedis(new RedisConfig
+            {
+                ConnectionString = redisConnectionString
             })
             .AddMemory(new MemoryConfig())
             .Build(new LockConfig());
 
 var result = await easyCacheManager.GetAsync<string>("My-Key");
 ```
+
+```csharp
+var easyCacheManager = new CacheBuilder()
+            .AddApi(new ApiConfig
+            {
+                Url = StaticData.Api
+            })
+            .AddSqlServerWithGetAndSetAndClear(new DbWithSetAndClearConfig
+            {
+                ConnectionString = sqlConnectionString,
+                GetQuery = StaticData.GetQuery,
+                SetQuery = StaticData.SetQuery,
+                ClearQuery = StaticData.ClearQuery,
+                ClearAllQuery = StaticData.ClearAllQuery,
+            })
+			.AddRedis(new RedisConfig
+            {
+                ConnectionString = redisConnectionString
+            })
+            .AddMemory(new MemoryConfig())
+            .Build(new LockConfig());
+
+var result = await easyCacheManager.GetAsync<string>("My-Key");
+```
+
 You can create your own provider with these interfaces:
 
  - IBaseCacheSource

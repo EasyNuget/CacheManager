@@ -3,7 +3,7 @@
 <root>
 	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
 		<xsd:element name="root" msdata:IsDataSet="true">
-			
+
 		</xsd:element>
 	</xsd:schema>
 	<resheader name="resmimetype">
@@ -23,5 +23,11 @@
 	</data>
 	<data name="Duplicate_priority" xml:space="preserve">
 		<value>Duplicate priority values found: {0}</value>
+	</data>
+	<data name="SqlServerWithGetAndSetAndClearAlreadyAdded" xml:space="preserve">
+		<value>SqlServerDbCacheSourceWithGet has already been added</value>
+	</data>
+	<data name="SqlServerWithGetAlreadyAdded" xml:space="preserve">
+		<value>Cannot add SqlServerDbCacheSourceWithGetAndSetAndClear because SqlServerDbCacheSourceWithGet has already been added</value>
 	</data>
 </root>

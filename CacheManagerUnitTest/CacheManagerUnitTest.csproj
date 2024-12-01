@@ -30,7 +30,7 @@
       <ProjectReference Include="..\CacheManagerClear.Redis\CacheManagerClear.Redis.csproj" />
       <ProjectReference Include="..\CacheManagerClear\CacheManagerClear.csproj" />
       <ProjectReference Include="..\CacheManager\CacheManager.csproj" />
-      <ProjectReference Include="..\CacheManager.Database\CacheManager.Database.csproj" />
+      <ProjectReference Include="..\CacheManager.SqlServer\CacheManager.SqlServer.csproj" />
       <ProjectReference Include="..\CacheManager.Redis\CacheManager.Redis.csproj" />
     </ItemGroup>
 

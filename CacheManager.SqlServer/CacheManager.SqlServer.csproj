@@ -8,23 +8,23 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Title>CacheManager.Database</Title>
+		<Title>CacheManager.SqlServer</Title>
 		<Authors>MHKarami97</Authors>
-		<Description>Easy Cache Manager Database</Description>
+		<Description>Easy Cache Manager SqlServer Database</Description>
 		<Copyright>https://github.com/MHKarami97/CacheManager</Copyright>
 		<PackageProjectUrl>https://github.com/MHKarami97/CacheManager</PackageProjectUrl>
 		<PackageIcon>icon.jpg</PackageIcon>
 		<RepositoryUrl>https://github.com/MHKarami97/CacheManager</RepositoryUrl>
 		<RepositoryType>public</RepositoryType>
-		<PackageTags>CacheManager.Database</PackageTags>
-		<PackageReleaseNotes>CacheManager.Database</PackageReleaseNotes>
+		<PackageTags>CacheManager.SqlServer</PackageTags>
+		<PackageReleaseNotes>CacheManager.SqlServer</PackageReleaseNotes>
 		<AssemblyVersion>2.1.0</AssemblyVersion>
 		<FileVersion>2.1.0</FileVersion>
 		<Version>2.1.0</Version>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\CacheManager\MHKarami97.snk</AssemblyOriginatorKeyFile>
 		<PublicSign>true</PublicSign>
-		<PackageId>EasyMultiCacheManager.Database</PackageId>
+		<PackageId>EasyMultiCacheManager.SqlServer</PackageId>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<ApplicationIcon>..\icon.ico</ApplicationIcon>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -33,11 +33,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-		<DocumentationFile>bin\Debug\CacheManager.Database.xml</DocumentationFile>
+		<DocumentationFile>bin\Debug\CacheManager.SqlServer.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<DocumentationFile>bin\Release\CacheManager.Database.xml</DocumentationFile>
+		<DocumentationFile>bin\Release\CacheManager.SqlServer.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>

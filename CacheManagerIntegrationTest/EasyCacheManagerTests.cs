@@ -1,7 +1,7 @@
 using CacheManager;
 using CacheManager.Config;
-using CacheManager.Database;
-using CacheManager.Database.Config;
+using CacheManager.SqlServer;
+using CacheManager.SqlServer.Config;
 using CacheManager.Redis;
 using CacheManager.Redis.Config;
 using CacheManagerApi;
@@ -90,7 +90,7 @@ public class EasyCacheManagerTests : IAsyncLifetime
 		_easyCacheManager = new CacheBuilder()
 			.AddApi(new ApiConfig { Url = StaticData.Api })
 			.AddRedis(new RedisConfig { ConnectionString = redisConnectionString })
-			.AddDb(new DbConfig { ConnectionString = sqlConnectionString, Query = StaticData.QueryToSelect })
+			.AddSqlServerWithGet(new DbConfig { ConnectionString = sqlConnectionString, GetQuery = StaticData.QueryToSelect })
 			.AddMemory(new MemoryConfig())
 			.Build(new LockConfig());
 	}

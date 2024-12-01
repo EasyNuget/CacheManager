@@ -38,7 +38,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManagerLoadTest", "Cac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManager.Redis", "CacheManager.Redis\CacheManager.Redis.csproj", "{F7C9B3D6-71B1-410E-B219-751270F9A1CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManager.Database", "CacheManager.Database\CacheManager.Database.csproj", "{AE17DE23-0E95-445A-A361-8283479C1218}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManager.SqlServer", "CacheManager.SqlServer\CacheManager.SqlServer.csproj", "{AE17DE23-0E95-445A-A361-8283479C1218}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7735FEB7-0AE9-4365-91C1-FC7325517028}"
 EndProject
