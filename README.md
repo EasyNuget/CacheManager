@@ -31,7 +31,7 @@ var easyCacheManager = new CacheBuilder()
                 ConnectionString = sqlConnectionString,
                 GetQuery = StaticData.GetQuery
             })
-			.AddRedis(new RedisConfig
+            .AddRedis(new RedisConfig
             {
                 ConnectionString = redisConnectionString
             })
@@ -55,7 +55,7 @@ var easyCacheManager = new CacheBuilder()
                 ClearQuery = StaticData.ClearQuery,
                 ClearAllQuery = StaticData.ClearAllQuery,
             })
-			.AddRedis(new RedisConfig
+            .AddRedis(new RedisConfig
             {
                 ConnectionString = redisConnectionString
             })
