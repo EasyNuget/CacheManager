@@ -66,6 +66,26 @@ public class MemoryCacheSource : ICacheSourceWithGetWithSetAndClear
 	}
 
 	/// <summary>
+	/// Stops
+	/// </summary>
+	public Task StopAsync()
+	{
+		_memoryCache.Dispose();
+
+		return Task.CompletedTask;
+	}
+
+	/// <summary>
+	/// Dispose
+	/// </summary>
+	/// <returns></returns>
+	public async ValueTask DisposeAsync()
+	{
+		await StopAsync().ConfigureAwait(false);
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
 	/// Priority, Lowest priority - checked last
 	/// </summary>
 #if NET8_0_OR_GREATER

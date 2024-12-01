@@ -110,6 +110,17 @@ public class RedisCacheSource : ICacheSourceWithGetWithSetAndClear
 	}
 
 	/// <summary>
+	/// Stops
+	/// </summary>
+	public Task StopAsync() => Task.CompletedTask;
+
+	/// <summary>
+	/// Dispose
+	/// </summary>
+	/// <returns></returns>
+	public async ValueTask DisposeAsync() => await StopAsync().ConfigureAwait(false);
+
+	/// <summary>
 	/// Priority, Lowest priority - checked last
 	/// </summary>
 #if NET8_0_OR_GREATER

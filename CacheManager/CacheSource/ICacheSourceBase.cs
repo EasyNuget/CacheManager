@@ -5,8 +5,14 @@ namespace CacheManager.CacheSource;
 /// <summary>
 /// Base interface of cache provider
 /// </summary>
-public interface ICacheSourceBase
+public interface ICacheSourceBase : IAsyncDisposable
 {
+	/// <summary>
+	/// Stop cache source
+	/// </summary>
+	/// <returns></returns>
+	Task StopAsync();
+
 	/// <summary>
 	/// Priority, Lowest priority - checked last
 	/// </summary>

@@ -157,16 +157,15 @@ public class EasyCacheManager : IEasyCacheManager
 	/// <summary>
 	/// Dispose of AsyncKeyedLock resources asynchronously
 	/// </summary>
-	public ValueTask DisposeAsync()
+	public async ValueTask DisposeAsync()
 	{
 		_asyncLock.Dispose();
-		GC.SuppressFinalize(this);
 
-#if NET8_0_OR_GREATER
-		return ValueTask.CompletedTask;
-#else
-		return default;
-#endif
+		var clearTasks = _cacheSources.Select(source => source.StopAsync()).ToList();
+
+		await Task.WhenAll(clearTasks).ConfigureAwait(false);
+
+		GC.SuppressFinalize(this);
 	}
 
 	private async Task SetToListAsync<T>(string key, T result, int priority)
