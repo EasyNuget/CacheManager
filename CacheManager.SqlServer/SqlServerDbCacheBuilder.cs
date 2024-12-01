@@ -8,9 +8,6 @@ namespace CacheManager.SqlServer;
 /// </summary>
 public static class SqlServerDbCacheBuilder
 {
-	private static bool _sqlServerWithGetAdded;
-	private static bool _sqlServerWithGetAndSetAndClearAdded;
-
 	/// <summary>
 	/// Add Sql Server Database Cache just with Get
 	/// </summary>
@@ -34,13 +31,6 @@ public static class SqlServerDbCacheBuilder
 			throw new ArgumentNullException(nameof(dbConfig));
 		}
 #endif
-
-		if (_sqlServerWithGetAndSetAndClearAdded)
-		{
-			throw new InvalidOperationException(Resources.SqlServerWithGetAndSetAndClearAlreadyAdded);
-		}
-
-		_sqlServerWithGetAdded = true;
 
 		_ = builder.AddCustom(new SqlServerDbCacheSourceWithGet(dbConfig, priority));
 
@@ -70,14 +60,6 @@ public static class SqlServerDbCacheBuilder
 			throw new ArgumentNullException(nameof(dbConfig));
 		}
 #endif
-
-		if (_sqlServerWithGetAdded)
-		{
-			throw new InvalidOperationException(Resources.SqlServerWithGetAlreadyAdded);
-		}
-
-		_sqlServerWithGetAndSetAndClearAdded = true;
-
 
 		_ = builder.AddCustom(new SqlServerDbCacheSourceWithGetAndSetAndClear(dbConfig, priority));
 
