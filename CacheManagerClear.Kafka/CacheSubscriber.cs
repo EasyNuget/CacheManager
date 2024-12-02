@@ -44,7 +44,7 @@ public class CacheSubscriber : ICacheSubscriber
 		_cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 		_consumer.Subscribe(_topic);
 
-		_task = Task.Run(() => _ = ConsumeAsync(cancellationToken), cancellationToken);
+		_task = Task.Run(() => _ = ConsumeAsync(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
 
 		return Task.CompletedTask;
 	}
@@ -54,18 +54,32 @@ public class CacheSubscriber : ICacheSubscriber
 	/// </summary>
 	public async Task StopAsync()
 	{
+		if (_disposed)
+		{
+			return;
+		}
+
+		try
+		{
 #if NET8_0_OR_GREATER
-		await _cancellationTokenSource!.CancelAsync().ConfigureAwait(false);
-		await _task.WaitAsync(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+			await _cancellationTokenSource!.CancelAsync().ConfigureAwait(false);
+			await _task.WaitAsync(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
 #else
 		_cancellationTokenSource?.Cancel();
 		_task.Wait(TimeSpan.FromSeconds(10));
 #endif
-
-		_consumer.Unsubscribe();
-		_consumer.Close();
-		_consumer.Dispose();
-		_cancellationTokenSource?.Dispose();
+		}
+		catch (TaskCanceledException)
+		{
+		}
+		finally
+		{
+			_consumer.Unsubscribe();
+			_consumer.Close();
+			_consumer.Dispose();
+			_cancellationTokenSource?.Dispose();
+			_disposed = true;
+		}
 	}
 
 	/// <summary>
@@ -102,6 +116,9 @@ public class CacheSubscriber : ICacheSubscriber
 				{
 					await _cacheManager.ClearCacheAsync(key).ConfigureAwait(false);
 				}
+			}
+			catch (TaskCanceledException)
+			{
 			}
 			catch (Exception e)
 			{

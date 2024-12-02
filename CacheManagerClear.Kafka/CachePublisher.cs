@@ -49,7 +49,14 @@ public class CachePublisher : ICachePublisher
 	/// </summary>
 	public Task StopAsync()
 	{
+		if (_disposed)
+		{
+			return Task.CompletedTask;
+		}
+
 		_producer.Dispose();
+
+		_disposed = true;
 
 		return Task.CompletedTask;
 	}

@@ -12,6 +12,7 @@ namespace CacheManager;
 /// </summary>
 public class EasyCacheManager : IEasyCacheManager
 {
+	private bool _disposed;
 	private readonly LockConfig _lockConfig;
 	private readonly IEnumerable<ICacheSourceWithGet> _cacheSources;
 	private readonly IEnumerable<ICacheSourceWithGetWithSet> _cacheSourcesWithSet;
@@ -160,11 +161,17 @@ public class EasyCacheManager : IEasyCacheManager
 	/// <returns></returns>
 	public async Task StopAsync()
 	{
+		if (_disposed)
+		{
+			return;
+		}
+
 		_asyncLock.Dispose();
 
 		var clearTasks = _cacheSources.Select(source => source.StopAsync()).ToList();
 
 		await Task.WhenAll(clearTasks).ConfigureAwait(false);
+		_disposed = true;
 	}
 
 	/// <summary>
@@ -172,9 +179,16 @@ public class EasyCacheManager : IEasyCacheManager
 	/// </summary>
 	public async ValueTask DisposeAsync()
 	{
+		if (_disposed)
+		{
+			return;
+		}
+
 		await StopAsync().ConfigureAwait(false);
 
 		GC.SuppressFinalize(this);
+
+		_disposed = true;
 	}
 
 	private async Task SetToListAsync<T>(string key, T result, int priority)
