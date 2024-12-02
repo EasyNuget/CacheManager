@@ -89,7 +89,7 @@ public static class RabbitCacheClearBuilder
 		}
 #endif
 
-		var subscriber = new CacheSubscriber(connection, cacheManager, exchange, queue);
+		var subscriber = new CacheSubscriber(connection, exchange, queue, cacheManager);
 
 		_ = builder.BuildSubscriber(subscriber);
 
@@ -141,7 +141,7 @@ public static class RabbitCacheClearBuilder
 #endif
 
 		var publisher = new CachePublisher(connection, exchange);
-		var subscriber = new CacheSubscriber(connection, cacheManager, exchange, queue);
+		var subscriber = new CacheSubscriber(connection, exchange, queue, cacheManager);
 
 		_ = builder.BuildPublisherAndSubscriber(publisher, subscriber);
 

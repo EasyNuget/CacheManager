@@ -23,7 +23,7 @@ public class CacheSubscriber : ICacheSubscriber
 	/// <param name="cacheManager">Cache manager instance</param>
 	/// <param name="exchange">RabbitMQ exchange name</param>
 	/// <param name="queue">RabbitMQ queue name</param>
-	public CacheSubscriber(IConnection connection, IEasyCacheManager cacheManager, string exchange, string queue)
+	public CacheSubscriber(IConnection connection, string exchange, string queue, IEasyCacheManager cacheManager)
 	{
 		_connection = connection ?? throw new ArgumentNullException(nameof(connection));
 		_cacheManager = cacheManager ?? throw new ArgumentNullException(nameof(cacheManager));
@@ -36,32 +36,30 @@ public class CacheSubscriber : ICacheSubscriber
 	/// </summary>
 	public async Task SubscribeAsync(CancellationToken cancellationToken)
 	{
-		using var channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-
-		await channel.ExchangeDeclareAsync(exchange: _exchange, type: ExchangeType.Fanout, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-		_ = await channel.QueueDeclareAsync(queue: _queue, durable: true, exclusive: false, autoDelete: false, cancellationToken: cancellationToken).ConfigureAwait(false);
-		await channel.QueueBindAsync(queue: _queue, exchange: _exchange, routingKey: string.Empty, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-		var consumer = new AsyncEventingBasicConsumer(channel);
-
-		consumer.ReceivedAsync += async (_, ea) =>
+		try
 		{
-			var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+			using var channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-			if (message == "*")
-			{
-				await _cacheManager.ClearAllCacheAsync().ConfigureAwait(false);
-			}
-			else
-			{
-				await _cacheManager.ClearCacheAsync(message).ConfigureAwait(false);
-			}
+			await channel.ExchangeDeclareAsync(exchange: _exchange, type: ExchangeType.Fanout, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+			_ = await channel.QueueDeclareAsync(queue: _queue, durable: true, exclusive: false, autoDelete: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+			await channel.QueueBindAsync(queue: _queue, exchange: _exchange, routingKey: string.Empty, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-			await channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken).ConfigureAwait(false);
-		};
+			var consumer = new AsyncEventingBasicConsumer(channel);
 
-		// Start consuming messages
-		_ = await channel.BasicConsumeAsync(queue: _queue, autoAck: false, consumer: consumer, cancellationToken: cancellationToken).ConfigureAwait(false);
+			consumer.ReceivedAsync += async (_, ea) => await ProcessAsync(ea, channel, cancellationToken).ConfigureAwait(false);
+
+			// Start consuming messages
+			_ = await channel.BasicConsumeAsync(queue: _queue, autoAck: false, consumer: consumer, cancellationToken: cancellationToken).ConfigureAwait(false);
+		}
+		catch (TaskCanceledException)
+		{
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+
+			await Task.Delay(100, cancellationToken).ConfigureAwait(false);
+		}
 	}
 
 	/// <summary>
@@ -69,8 +67,14 @@ public class CacheSubscriber : ICacheSubscriber
 	/// </summary>
 	public async Task StopAsync()
 	{
+		if (_disposed)
+		{
+			return;
+		}
+
 		await _connection.DisposeAsync().ConfigureAwait(false);
 		await _connection.CloseAsync().ConfigureAwait(false);
+		_disposed = true;
 	}
 
 	/// <summary>
@@ -87,5 +91,33 @@ public class CacheSubscriber : ICacheSubscriber
 		await StopAsync().ConfigureAwait(false);
 
 		_disposed = true;
+	}
+
+	private async Task ProcessAsync(BasicDeliverEventArgs ea, IChannel channel, CancellationToken cancellationToken)
+	{
+		try
+		{
+			var key = Encoding.UTF8.GetString(ea.Body.ToArray());
+
+			if (key.Equals(StaticData.ClearAllKey, StringComparison.Ordinal))
+			{
+				await _cacheManager.ClearAllCacheAsync().ConfigureAwait(false);
+			}
+			else
+			{
+				await _cacheManager.ClearCacheAsync(key).ConfigureAwait(false);
+			}
+
+			await channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken).ConfigureAwait(false);
+		}
+		catch (TaskCanceledException)
+		{
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+
+			await Task.Delay(100, cancellationToken).ConfigureAwait(false);
+		}
 	}
 }

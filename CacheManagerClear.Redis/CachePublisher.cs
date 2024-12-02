@@ -55,8 +55,14 @@ public class CachePublisher : ICachePublisher
 	/// </summary>
 	public async Task StopAsync()
 	{
+		if (_disposed)
+		{
+			return;
+		}
+
 		await _redis.DisposeAsync().ConfigureAwait(false);
 		await _redis.CloseAsync().ConfigureAwait(false);
+		_disposed = true;
 	}
 
 	/// <summary>
