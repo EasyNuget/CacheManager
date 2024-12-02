@@ -155,15 +155,24 @@ public class EasyCacheManager : IEasyCacheManager
 	}
 
 	/// <summary>
-	/// Dispose of AsyncKeyedLock resources asynchronously
+	/// Stop all cache sources
 	/// </summary>
-	public async ValueTask DisposeAsync()
+	/// <returns></returns>
+	public async Task StopAsync()
 	{
 		_asyncLock.Dispose();
 
 		var clearTasks = _cacheSources.Select(source => source.StopAsync()).ToList();
 
 		await Task.WhenAll(clearTasks).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Dispose of AsyncKeyedLock resources asynchronously
+	/// </summary>
+	public async ValueTask DisposeAsync()
+	{
+		await StopAsync().ConfigureAwait(false);
 
 		GC.SuppressFinalize(this);
 	}

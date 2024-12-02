@@ -16,10 +16,7 @@ public class EasyCacheManagerClearKafkaTests : IAsyncLifetime
 	public Task InitializeAsync()
 	{
 		_mockProducer = new Mock<IProducer<Null, string>>();
-
 		_cachePublisher = new CachePublisher(_mockProducer.Object, StaticData.Topic);
-		_ = _mockProducer.Setup(p => p.ProduceAsync(It.IsAny<string>(), It.IsAny<Message<Null, string>>(), It.IsAny<CancellationToken>()))
-			.ReturnsAsync(() => new DeliveryResult<Null, string>());
 
 		_mockConsumer = new Mock<IConsumer<Null, string>>();
 		_mockCacheManager = new Mock<IEasyCacheManager>();
@@ -77,7 +74,7 @@ public class EasyCacheManagerClearKafkaTests : IAsyncLifetime
 		await _cachePublisher.PublishClearAllCacheAsync(cancellationTokenSource.Token).ConfigureAwait(true);
 
 		// Assert
-		_mockProducer.Verify(p => p.ProduceAsync(StaticData.Topic, It.Is<Message<Null, string>>(m => m.Value == StaticData.ClearAllKey), It.IsAny<CancellationToken>()), Times.Once);
+		_mockProducer.Verify(p => p.ProduceAsync(StaticData.Topic, It.Is<Message<Null, string>>(m => m.Value == CacheManagerClear.StaticData.ClearAllKey), It.IsAny<CancellationToken>()), Times.Once);
 	}
 
 	[Fact]
@@ -92,10 +89,11 @@ public class EasyCacheManagerClearKafkaTests : IAsyncLifetime
 
 		// Act
 		await _cacheSubscriber.SubscribeAsync(cancellationTokenSource.Token).ConfigureAwait(true);
+		await Task.Delay(100).ConfigureAwait(true);
 
 		// Assert
-		_mockCacheManager.Verify(c => c.ClearCacheAsync(StaticData.Key), Times.AtLeastOnce);
 		_mockCacheManager.Verify(c => c.ClearAllCacheAsync(), Times.Never);
+		_mockCacheManager.Verify(c => c.ClearCacheAsync(StaticData.Key), Times.AtLeastOnce);
 	}
 
 	[Fact]
@@ -103,13 +101,14 @@ public class EasyCacheManagerClearKafkaTests : IAsyncLifetime
 	{
 		// Arrange
 		var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(1));
-		var consumeResult = new ConsumeResult<Null, string> { Message = new Message<Null, string> { Value = StaticData.ClearAllKey } };
+		var consumeResult = new ConsumeResult<Null, string> { Message = new Message<Null, string> { Value = CacheManagerClear.StaticData.ClearAllKey } };
 
 		// Set up the consumer to return the mock consume result
 		_ = _mockConsumer.Setup(c => c.Consume(It.IsAny<CancellationToken>())).Returns(consumeResult);
 
 		// Act
 		await _cacheSubscriber.SubscribeAsync(cancellationTokenSource.Token).ConfigureAwait(true);
+		await Task.Delay(100).ConfigureAwait(true);
 
 		// Assert
 		_mockCacheManager.Verify(c => c.ClearAllCacheAsync(), Times.AtLeastOnce);

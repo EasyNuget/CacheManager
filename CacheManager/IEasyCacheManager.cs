@@ -30,4 +30,10 @@ public interface IEasyCacheManager : IAsyncDisposable
 	/// Clear cached item from all
 	/// </summary>
 	Task ClearAllCacheAsync();
+
+	/// <summary>
+	/// Stop all cache sources
+	/// </summary>
+	/// <returns></returns>
+	Task StopAsync();
 }

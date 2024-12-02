@@ -155,4 +155,72 @@ public class EasyCacheManagerTests : IAsyncLifetime
 		memoryCacheSource.Verify(x => x.ClearAsync(Key), Times.Never, "Memory ClearAsync should not call");
 		redisCacheSource.Verify(x => x.ClearAsync(Key), Times.Never, "Redis ClearAsync should not call");
 	}
+
+	[Fact]
+	public async Task StopAsync_CallsStopOnAllCacheSources()
+	{
+		// Arrange
+		var cacheSourceWithSet1 = new Mock<ICacheSourceWithGetWithSet>();
+		_ = cacheSourceWithSet1.Setup(x => x.Priority).Returns(1);
+		_ = cacheSourceWithSet1.Setup(x => x.StopAsync()).Returns(Task.CompletedTask);
+
+		var cacheSourceWithSet2 = new Mock<ICacheSourceWithGetWithSet>();
+		_ = cacheSourceWithSet2.Setup(x => x.Priority).Returns(2);
+		_ = cacheSourceWithSet2.Setup(x => x.StopAsync()).Returns(Task.CompletedTask);
+
+		var cacheSourceWithClear1 = new Mock<ICacheSourceWithGetWithClear>();
+		_ = cacheSourceWithClear1.Setup(x => x.Priority).Returns(3);
+		_ = cacheSourceWithClear1.Setup(x => x.StopAsync()).Returns(Task.CompletedTask);
+
+		var cacheSourceWithClear2 = new Mock<ICacheSourceWithGetWithClear>();
+		_ = cacheSourceWithClear2.Setup(x => x.Priority).Returns(4);
+		_ = cacheSourceWithClear2.Setup(x => x.StopAsync()).Returns(Task.CompletedTask);
+
+		var cacheSources = new List<ICacheSourceWithGet> { cacheSourceWithSet1.Object, cacheSourceWithSet2.Object, cacheSourceWithClear1.Object, cacheSourceWithClear2.Object };
+
+		var cacheManager = new EasyCacheManager(cacheSources, _lockConfig);
+
+		// Act
+		await cacheManager.StopAsync().ConfigureAwait(false);
+
+		// Assert
+		cacheSourceWithSet1.Verify(c => c.StopAsync(), Times.Once);
+		cacheSourceWithSet2.Verify(c => c.StopAsync(), Times.Once);
+		cacheSourceWithClear1.Verify(c => c.StopAsync(), Times.Once);
+		cacheSourceWithClear2.Verify(c => c.StopAsync(), Times.Once);
+	}
+
+	[Fact]
+	public async Task DisposeAsync_CallsStopAsyncForAllSources()
+	{
+		// Arrange
+		var cacheSourceWithSet1 = new Mock<ICacheSourceWithGetWithSet>();
+		_ = cacheSourceWithSet1.Setup(x => x.Priority).Returns(1);
+		_ = cacheSourceWithSet1.Setup(x => x.StopAsync()).Returns(Task.CompletedTask);
+
+		var cacheSourceWithSet2 = new Mock<ICacheSourceWithGetWithSet>();
+		_ = cacheSourceWithSet2.Setup(x => x.Priority).Returns(2);
+		_ = cacheSourceWithSet2.Setup(x => x.StopAsync()).Returns(Task.CompletedTask);
+
+		var cacheSourceWithClear1 = new Mock<ICacheSourceWithGetWithClear>();
+		_ = cacheSourceWithClear1.Setup(x => x.Priority).Returns(3);
+		_ = cacheSourceWithClear1.Setup(x => x.StopAsync()).Returns(Task.CompletedTask);
+
+		var cacheSourceWithClear2 = new Mock<ICacheSourceWithGetWithClear>();
+		_ = cacheSourceWithClear2.Setup(x => x.Priority).Returns(4);
+		_ = cacheSourceWithClear2.Setup(x => x.StopAsync()).Returns(Task.CompletedTask);
+
+		var cacheSources = new List<ICacheSourceWithGet> { cacheSourceWithSet1.Object, cacheSourceWithSet2.Object, cacheSourceWithClear1.Object, cacheSourceWithClear2.Object };
+
+		var cacheManager = new EasyCacheManager(cacheSources, _lockConfig);
+
+		// Act
+		await cacheManager.DisposeAsync().ConfigureAwait(true);
+
+		// Assert
+		cacheSourceWithSet1.Verify(c => c.StopAsync(), Times.Once);
+		cacheSourceWithSet2.Verify(c => c.StopAsync(), Times.Once);
+		cacheSourceWithClear1.Verify(c => c.StopAsync(), Times.Once);
+		cacheSourceWithClear2.Verify(c => c.StopAsync(), Times.Once);
+	}
 }
