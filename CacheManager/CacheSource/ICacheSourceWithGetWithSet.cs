@@ -10,5 +10,5 @@ public interface ICacheSourceWithGetWithSet : ICacheSourceWithGet
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <param name="data">Data to cache</param>
-	Task SetAsync<T>(string key, T data);
+	public Task SetAsync<T>(string key, T data);
 }

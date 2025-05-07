@@ -87,7 +87,7 @@ public class RedisCacheSource : ICacheSourceWithGetWithSetAndClear
 		var server = connectionMultiplexer.GetServer(_config.ConnectionString);
 		var pattern = $"{_keyPrefix}*";
 
-		await foreach (var key in server.KeysAsync(pattern: pattern))
+		await foreach (var key in server.KeysAsync(pattern: pattern).ConfigureAwait(false))
 		{
 			_ = await _redisCache.KeyDeleteAsync(key).ConfigureAwait(false);
 		}

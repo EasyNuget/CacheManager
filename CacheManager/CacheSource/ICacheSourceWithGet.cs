@@ -10,5 +10,5 @@ public interface ICacheSourceWithGet : ICacheSourceBase
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <returns>Result</returns>
-	Task<T?> GetAsync<T>(string key);
+	public Task<T?> GetAsync<T>(string key);
 }

@@ -10,7 +10,7 @@ public interface IEasyCacheManager : IAsyncDisposable
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <returns>cached item</returns>
-	Task<T?> GetAsync<T>(string key);
+	public Task<T?> GetAsync<T>(string key);
 
 	/// <summary>
 	/// Manual set value to cache
@@ -18,22 +18,22 @@ public interface IEasyCacheManager : IAsyncDisposable
 	/// <param name="key">Key</param>
 	/// <param name="value">Value</param>
 	/// <returns>cached item</returns>
-	Task SetAsync<T>(string key, T value);
+	public Task SetAsync<T>(string key, T value);
 
 	/// <summary>
 	/// Clear cached item by key
 	/// </summary>
 	/// <param name="key">Key</param>
-	Task ClearCacheAsync(string key);
+	public Task ClearCacheAsync(string key);
 
 	/// <summary>
 	/// Clear cached item from all
 	/// </summary>
-	Task ClearAllCacheAsync();
+	public Task ClearAllCacheAsync();
 
 	/// <summary>
 	/// Stop all cache sources
 	/// </summary>
 	/// <returns></returns>
-	Task StopAsync();
+	public Task StopAsync();
 }

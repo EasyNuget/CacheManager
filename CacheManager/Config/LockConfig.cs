@@ -6,15 +6,6 @@
 public class LockConfig
 {
 	/// <summary>
-	/// The maximum number of requests for the semaphore that can be granted concurrently. Defaults to 1.
-	/// </summary>
-#if NET8_0_OR_GREATER
-	public int MaxCount { get; init; } = 1;
-#else
-	public int MaxCount { get; set; } = 1;
-#endif
-
-	/// <summary>
 	/// The size of the pool to use in order for generated objects to be reused. This is NOT a concurrency limit,
 	/// but if the pool is empty then a new object will be created rather than waiting for an object to return to
 	/// the pool. Set to 0 to disable pooling (strongly recommended to use). Defaults to 20.
