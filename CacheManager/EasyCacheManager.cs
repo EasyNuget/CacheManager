@@ -58,7 +58,9 @@ public class EasyCacheManager : IEasyCacheManager
 
 		_asyncLock = new AsyncKeyedLocker<string>(new AsyncKeyedLockOptions
 		{
-			PoolSize = Environment.ProcessorCount * lockConfig.PoolSize, PoolInitialFill = lockConfig.PoolInitialFill, MaxCount = lockConfig.MaxCount
+			PoolSize = Environment.ProcessorCount * lockConfig.PoolSize,
+			PoolInitialFill = lockConfig.PoolInitialFill,
+			MaxCount = 1
 		});
 
 		_ongoingOperations = new ConcurrentDictionary<string, Task>();

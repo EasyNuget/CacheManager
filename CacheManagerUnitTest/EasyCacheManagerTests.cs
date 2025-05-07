@@ -11,7 +11,7 @@ public class EasyCacheManagerTests : IAsyncLifetime
 
 	public Task InitializeAsync()
 	{
-		_lockConfig = new LockConfig { PoolSize = 1, PoolInitialFill = 1, MaxCount = 1, TimeOut = TimeSpan.FromSeconds(5) };
+		_lockConfig = new LockConfig { PoolSize = 1, PoolInitialFill = 1, TimeOut = TimeSpan.FromSeconds(5) };
 
 		return Task.CompletedTask;
 	}

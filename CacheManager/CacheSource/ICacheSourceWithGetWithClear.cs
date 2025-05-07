@@ -9,10 +9,10 @@ public interface ICacheSourceWithGetWithClear : ICacheSourceWithGet
 	/// Clear from cache with key
 	/// </summary>
 	/// <param name="key"></param>
-	Task ClearAsync(string key);
+	public Task ClearAsync(string key);
 
 	/// <summary>
 	/// Clear all from cache
 	/// </summary>
-	Task ClearAllAsync();
+	public Task ClearAllAsync();
 }

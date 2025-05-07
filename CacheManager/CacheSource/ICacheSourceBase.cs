@@ -11,7 +11,7 @@ public interface ICacheSourceBase : IAsyncDisposable
 	/// Stop cache source
 	/// </summary>
 	/// <returns></returns>
-	Task StopAsync();
+	public Task StopAsync();
 
 	/// <summary>
 	/// Priority, Lowest priority - checked last
@@ -20,6 +20,7 @@ public interface ICacheSourceBase : IAsyncDisposable
 	/// The value of <see cref="Priority"/> should be between 1 and 100.
 	/// </remarks>
 	[Range(1, 100)]
+	public
 #if NET8_0_OR_GREATER
 	int Priority { get; init; }
 #else
